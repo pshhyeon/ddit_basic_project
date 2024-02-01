@@ -41,14 +41,9 @@ public class MainController {
 		System.out.println("로그인을 시작합니다");
 		String id = ScanUtil.nextLine("id : ");
 		String pass = ScanUtil.nextLine("pass : ");
-		UserVo user = (UserVo) sessionStorage.get("user");
-		MainController.sessionStorage.put("user", user);
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
 		param.add(pass);
-		// 홈에서 sessionStorage.put해서 키 login 에 sel (1,2,3)을 넣어줌
-		// UserVo userVosel= userService.login(param, (int)sessionStorage.get("login"));
-		// 여기서 userService.login에 param(id와pass)그리고 sel 값을 보내준다
 		if (userService.login(param, (int) sessionStorage.get("login"))) {
 			System.out.println("로그인");
 			System.out.println((UserVo) sessionStorage.get("user"));
@@ -65,7 +60,6 @@ public class MainController {
 		System.out.println("4. 회원가입");
 		System.out.println("5. home");
 		int sel = ScanUtil.nextInt("메뉴 선택 : ");
-
 		switch (sel) {
 		case 1:
 		case 2:
