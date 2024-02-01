@@ -41,6 +41,7 @@ public class MainController {
 		System.out.println("브랜치 테스트2");
 		System.out.println("브랜치 테스트3");
 		System.out.println("브랜치 테스트4");
+		System.out.println("상현 받아줘~~");
 		
 	}
 
