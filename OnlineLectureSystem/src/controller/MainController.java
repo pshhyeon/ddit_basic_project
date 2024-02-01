@@ -36,6 +36,7 @@ public class MainController {
 	}
 	
 
+	
 	private View login() {
 		System.out.println("로그인을 시작합니다");
 		String id = ScanUtil.nextLine("id : ");
