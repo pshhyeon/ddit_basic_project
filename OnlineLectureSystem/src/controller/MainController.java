@@ -35,9 +35,22 @@ public class MainController {
 		}
 	}
 	
+<<<<<<< HEAD
 	private View login() {
 		System.out.println("로그인 테스트");
 		return View.HOME;
+=======
+	private void test() {
+		System.out.println("커밋 테스트");
+		System.out.println("브랜치 테스트");
+		System.out.println("브랜치 테스트2");
+		System.out.println("브랜치 테스트3");
+		System.out.println("브랜치 테스트4");
+		System.out.println("상현 받아줘~~");
+		System.out.println("성후나 나 잘받았어 고마웡~");
+		System.out.println("성후나 나 잘받았어 고마웡~1");
+		
+>>>>>>> refs/remotes/origin/shun
 	}
 
 	private View home() {
