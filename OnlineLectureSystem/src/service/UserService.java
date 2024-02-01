@@ -22,12 +22,12 @@ public class UserService {
 
 	UserDao dao = UserDao.getInstance();
 
-<<<<<<< HEAD
-	public UserVo login(List<Object> param, int sel) {
-
-		return dao.login(param, sel);
+	public boolean login(List<Object> param, int sel) {
+		
+		MainController.sessionStorage.put("user", dao.login(param, sel));
+		if(MainController.sessionStorage.get("user") != null) {
+			return true;
+		}
+		return false;
 	}
-
-=======
->>>>>>> refs/remotes/origin/shun
 }
