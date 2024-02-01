@@ -22,9 +22,12 @@ public class UserService {
 
 	UserDao dao = UserDao.getInstance();
 
+<<<<<<< HEAD
 	public UserVo login(List<Object> param, int sel) {
 
 		return dao.login(param, sel);
 	}
 
+=======
+>>>>>>> refs/remotes/origin/shun
 }
