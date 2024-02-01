@@ -28,6 +28,7 @@ public class MainController {
 				break;
 			case LOGIN:
 				view = login();
+				break;
 			case USER_JOIN:
 				view = userJoin();
 				break;
@@ -36,7 +37,7 @@ public class MainController {
 			}
 		}
 	}
-	
+//	commy and push 할때 로컬에서 보내야한다 브랜치는 shun으로
 
 	
 	private View userJoin() {
