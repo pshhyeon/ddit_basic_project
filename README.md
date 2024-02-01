@@ -1,5 +1,6 @@
 # JAVA & ORACLE 사용 CRUD 프로젝트
-
+ - Tool : Eclipse, Oracle Developer, ERD Cloud, Git, Github
+ 
 ## 자바 콘솔로 구현하는 간단한 MVC패턴 [강의 시스템] 구현
 
 ## 주요기능
@@ -11,12 +12,13 @@
 - 6. 불건전, 악성 리뷰 블라인드 처리
 
 ### 1. 사용자 요구사항 분석 및 정의 후 테이블명세서 추출
+
 ### 2. 테이블 명세서에 따른 ERD설계
-### ![ddit_4_온라인 강의 시스템](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/b803df43-ce17-406d-98b4-5d96ff14be9b)
+
+### ![ERD](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/74e86e24-2222-493c-ae71-e3b0504989b9)
 
 ### 3. DB생성
-### 4. 
 
-사진 넣는법: 이슈에서 사진 넣어서 아래처럼 나왔을때 링크 가져오기
-30초내외 동영상 촬영 후 gifmaker로 짤로 만들고 시연 영상 삽입 사진이랑 같은 방법
-wirte > mark down!
+### 4. JAVA 코딩
+ - Controller <> Service <> Dao <> DB 로 구분
+
