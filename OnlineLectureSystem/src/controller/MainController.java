@@ -49,6 +49,8 @@ public class MainController {
 		switch (sel) {
 		case 1:
 			return View.HOME;
+		case 2:
+			return View.HOME;
 		default:
 			return View.HOME;
 		}
