@@ -1,9 +1,13 @@
 # JAVA & ORACLE 사용 CRUD 프로젝트
- - Tool : #2C2255 Eclipse, #F80000 Oracle Developer, ERD Cloud, Git, Github
+ - Tool :  <img src="https://github.com/pshhyeon/ddit_basic_project/assets/130214802/a191ee0a-bd26-4a23-9837-48ce7be73fe0" alt="eclipseide-color" width="15"> Eclipse,  Oracle Developer, Git, Github
 
+<img src="https://github.com/pshhyeon/ddit_basic_project/assets/130214802/a191ee0a-bd26-4a23-9837-48ce7be73fe0" alt="eclipseide-color" width="20">
+![eclipseide-color](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/a191ee0a-bd26-4a23-9837-48ce7be73fe0)
 
 <img src="https://img.shields.io/badge/쓰고자하는_텍스트-컬러코드?style=flat-square&logo=simpleicons에서_아이콘이름&logoColor=white"/></a>&nbsp 
 
+<img src="![eclipseide-color](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/a191ee0a-bd26-4a23-9837-48ce7be73fe0)" width="300" height="300">
+<img src="이미지 URL" alt="이미지 설명" width="300" height="200">
 
 
 
