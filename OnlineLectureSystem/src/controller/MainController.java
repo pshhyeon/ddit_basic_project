@@ -37,6 +37,8 @@ public class MainController {
 	
 	private void test() {
 		System.out.println("커밋 테스트");
+		System.out.println("브랜치 테스트");
+		
 	}
 
 	
