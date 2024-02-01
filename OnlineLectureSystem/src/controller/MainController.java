@@ -34,6 +34,7 @@ public class MainController {
 			}
 		}
 	}
+	
 
 	private View login() {
 		System.out.println("로그인을 시작합니다");
@@ -47,10 +48,10 @@ public class MainController {
 		// 홈에서 sessionStorage.put해서 키 login 에 sel (1,2,3)을 넣어줌
 		// UserVo userVosel= userService.login(param, (int)sessionStorage.get("login"));
 		// 여기서 userService.login에 param(id와pass)그리고 sel 값을 보내준다
-		if(userService.login(param, (int)sessionStorage.get("login"))) {
+		if (userService.login(param, (int) sessionStorage.get("login"))) {
 			System.out.println("로그인");
-			System.out.println((UserVo)sessionStorage.get("user"));
-		}else {
+			System.out.println((UserVo) sessionStorage.get("user"));
+		} else {
 			System.out.println("로그인 실패");
 		}
 		return View.HOME;
