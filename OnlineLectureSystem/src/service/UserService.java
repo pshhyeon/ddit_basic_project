@@ -22,3 +22,4 @@ public class UserService {
 
 	UserDao userDao = UserDao.getInstance();
 
+}
