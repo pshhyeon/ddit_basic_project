@@ -20,6 +20,14 @@ public class UserService {
 		return instance;
 	}
 
-	UserDao userDao = UserDao.getInstance();
+	UserDao dao = UserDao.getInstance();
 
+	public boolean login(List<Object> param, int sel) {
+		
+		MainController.sessionStorage.put("user", dao.login(param, sel));
+		if(MainController.sessionStorage.get("user") != null) {
+			return true;
+		}
+		return false;
+	}
 }
