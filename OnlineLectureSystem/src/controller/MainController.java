@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import service.CartService;
 import service.UserService;
 import util.ScanUtil;
 import util.View;
-import vo.ProdVo; // Vo 임포트
+
 import vo.UserVo;
 
 // 출력부분 클래스 상속
@@ -38,7 +37,6 @@ public class MainController {
 	}
 	
 	private View login() {
-		System.out.println("로그인 테스트");
 		return View.HOME;
 	}
 

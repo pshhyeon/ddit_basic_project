@@ -40,7 +40,7 @@ public class JDBCUtil {
 	
 	// 개인 IP, 접속정보로 변경
 	private String url = "jdbc:oracle:thin:@192.168.35.47:1521:xe";
-	private String user = "PSH";
+	private String user = "PROJECT4";
 	private String password = "java";
 	
 	private Connection conn = null;
