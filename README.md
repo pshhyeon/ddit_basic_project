@@ -1,6 +1,12 @@
 # JAVA & ORACLE 사용 CRUD 프로젝트
- - Tool : Eclipse, Oracle Developer, ERD Cloud, Git, Github
- 
+ - Tool : #2C2255 Eclipse, #F80000 Oracle Developer, ERD Cloud, Git, Github
+
+
+<img src="https://img.shields.io/badge/쓰고자하는_텍스트-컬러코드?style=flat-square&logo=simpleicons에서_아이콘이름&logoColor=white"/></a>&nbsp 
+
+
+
+
 ## 자바 콘솔로 구현하는 간단한 MVC패턴 [강의 시스템] 구현
 
 ## 주요기능
