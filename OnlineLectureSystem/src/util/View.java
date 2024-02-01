@@ -1,9 +1,11 @@
 package util;
 
 public enum View {
-	HOME, // 홈
-	LOGIN, // 로그인
+	HOME, 
+	LOGIN, 
+	USER_JOIN,
 	USER_HOME,
-	LECTURE_HOME,
+	LECTURER_HOME,
 	ADMIN_HOME
+	
 }

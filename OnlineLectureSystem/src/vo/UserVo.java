@@ -13,6 +13,7 @@ public class UserVo {
 	private String user_name;
 	private String join_date;
 	private int divi_no;
+
 //	@Override
 //	public String toString() {
 //		return mem_name + "님 환영합니다 :)";
