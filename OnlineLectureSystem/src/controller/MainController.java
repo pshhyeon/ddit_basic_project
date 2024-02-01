@@ -34,6 +34,10 @@ public class MainController {
 			}
 		}
 	}
+	
+	private void test() {
+		System.out.println("커밋 테스트");
+	}
 
 	
 
