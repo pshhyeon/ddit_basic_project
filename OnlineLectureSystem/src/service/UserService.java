@@ -20,5 +20,11 @@ public class UserService {
 		return instance;
 	}
 
-	UserDao userDao = UserDao.getInstance();
+	UserDao dao = UserDao.getInstance();
 
+	public UserVo login(List<Object> param, int sel) {
+
+		return dao.login(param, sel);
+	}
+
+}
