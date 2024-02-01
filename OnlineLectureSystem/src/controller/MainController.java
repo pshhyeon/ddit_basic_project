@@ -28,6 +28,8 @@ public class MainController {
 				break;
 			case LOGIN:
 				view = login();
+			case USER_JOIN:
+				view = userJoin();
 				break;
 			default:
 				break;
@@ -37,33 +39,68 @@ public class MainController {
 	
 
 	
+	private View userJoin() {
+//		USER_NO, 
+//		USER_ID,
+//		USER_PASS,
+//		USER_ADDRESS,
+//		USER_HP,
+//		USER_BIR,
+//		USER_NAME,
+//		JOIN_DATE,
+//		DIVI_NO
+		System.out.println("1. 일반회원가입");
+		System.out.println("2. 강사회원가입");
+		System.out.println("3. home");
+		
+		int sel = ScanUtil.nextInt("메뉴 선택 : ");
+		if(sel==3) {
+			return View.HOME;
+		}
+		System.out.println();
+		System.out.println("회원가입을 진행합니다");
+		String id = ScanUtil.nextLine("ID : ");
+		String pass = ScanUtil.nextLine("PASS : ");
+		String name = ScanUtil.nextLine("이름 : ");
+		System.out.println("생년월일은 YYYYmmdd형식으로 입력해주세요!!");
+		String bir = ScanUtil.nextLine("생년월일 : ");
+		System.out.println("선택사항입니다. 작성하지 않을시 Enter를 눌러주세요");
+		String address = ScanUtil.nextLine("주소 : ");
+		System.out.println("선택사항입니다. 작성하지 않을시 Enter를 눌러주세요");
+		String hp = ScanUtil.nextLine("핸드폰번호 : ");
+		List<Object> param = new ArrayList<Object>();
+		param.add(id);
+		param.add(pass);
+		param.add(address);
+		param.add(hp);
+		param.add(bir);
+		param.add(name);
+		boolean join = userService.join(param, sel);
+		if(join) {
+			return  (View)sessionStorage.get("page"); 
+		}
+		else {
+			return View.USER_JOIN;
+		}
+	}
+
 	private View login() {
 		System.out.println("로그인을 시작합니다");
 		String id = ScanUtil.nextLine("id : ");
 		String pass = ScanUtil.nextLine("pass : ");
-		UserVo user = (UserVo)sessionStorage.get("user");
-		MainController.sessionStorage.put("user",user);
 		UserVo user = (UserVo) sessionStorage.get("user");
-		MainController.sessionStorage.put("user", user);
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
 		param.add(pass);
-<<<<<<< HEAD
 
-		UserVo userVosel= userService.login(param, (int)sessionStorage.get("login"));
 		//홈에서 sessionStorage.put해서 키 login 에 sel (1,2,3)을 넣어줌
 		//UserVo userVosel= userService.login(param, (int)sessionStorage.get("login"));
 		//여기서 userService.login에 param(id와pass)그리고 sel 값을 보내준다
 //		int usersel = (int)sessionStorage.get("login");
 
 		
-		if(userService.login(param, (int)sessionStorage.get("login"))) {
-=======
-		// 홈에서 sessionStorage.put해서 키 login 에 sel (1,2,3)을 넣어줌
-		// UserVo userVosel= userService.login(param, (int)sessionStorage.get("login"));
-		// 여기서 userService.login에 param(id와pass)그리고 sel 값을 보내준다
+	
 		if (userService.login(param, (int) sessionStorage.get("login"))) {
->>>>>>> branch 'main' of https://github.com/pshhyeon/ddit_basic_project.git
 			System.out.println("로그인");
 			System.out.println((UserVo) sessionStorage.get("user"));
 		} else {
@@ -87,7 +124,7 @@ public class MainController {
 			sessionStorage.put("login", sel);
 			return View.LOGIN;
 		case 4:
-			return View.HOME;
+			return View.USER_JOIN;
 		case 5:
 			return View.HOME;
 		default:
