@@ -13,7 +13,10 @@ public class UserVo {
 	private String user_name;
 	private String join_date;
 	private int divi_no;
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'main' of https://github.com/pshhyeon/ddit_basic_project.git
 //	@Override
 //	public String toString() {
 //		return mem_name + "님 환영합니다 :)";
