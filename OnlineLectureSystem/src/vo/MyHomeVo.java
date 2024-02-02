@@ -10,4 +10,5 @@ public class MyHomeVo {
 	private String lecture_start;
 	private String lecture_finish;
 	
+	
 }

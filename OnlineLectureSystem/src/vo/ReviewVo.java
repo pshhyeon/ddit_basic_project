@@ -12,4 +12,5 @@ public class ReviewVo {
 	private int user_no;
 	private int lecture_no;
 	
+	
 }

@@ -10,4 +10,5 @@ public class ReplyVo {
 	private int review_no;
 	private int user_no;
 	
+	
 }

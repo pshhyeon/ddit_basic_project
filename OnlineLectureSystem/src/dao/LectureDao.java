@@ -7,6 +7,7 @@ import java.util.Map;
 import controller.MainController;
 import util.JDBCUtil;
 import vo.LectureCategoryVo;
+import vo.LectureVo;
 import vo.UserVo;
 
 public class LectureDao {
@@ -105,5 +106,19 @@ public class LectureDao {
 	   return jdbc.selectList(sql, LectureCategoryVo.class);
    }
    
+   public List<Map<String, Object>> lectureApplyList(List<Object> param) {
+		String sql =" SELECT U.USER_NAME AS USER_NAME, \r\n" + 
+				"       L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
+				"       C.CATEGORY_NAME AS CATEGORY_NAME,\r\n" + 
+				"       LE.LEVEL_NAME AS LEVEL_NAME,\r\n" + 
+				"       TO_CHAR(M.LECTURE_START) AS LECTURE_START\r\n" + 
+				"FROM MYHOME M , USER_ U , LECTURE L , \"CATEGORY\" C , \"LEVEL\" LE\r\n" + 
+				"WHERE M.USER_NO = U.USER_NO\r\n" + 
+				"AND M.LECTURE_NO = L.LECTURE_NO\r\n" + 
+				"AND C.CATEGORY_NO = L.CATEGORY_NO\r\n" + 
+				"AND LE.LEVEL_NO = L.LEVEL_NO\r\n" + 
+				"AND M.USER_NO = ?";
+		return jdbc.selectList(sql,param);
+	}
    
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import dao.LectureDao;
 import vo.LectureCategoryVo;
+import vo.LectureVo;
 
 public class LectureService {
 	private static LectureService instance = null;
@@ -36,6 +37,13 @@ public class LectureService {
 
 	public Map<String, Object> lectureDetail(List<Object> param) {
 		return dao.lectureDetail(param);
+	}
+
+	public void lectureInsert(List<Object> param) {
+		dao.lectureInsert(param);
+	}
+	public List<Map<String,Object>> lectureApplyList(List<Object> param) {
+		return dao.lectureApplyList(param);
 	}
 
 }
