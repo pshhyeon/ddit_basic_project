@@ -1,9 +1,9 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import dao.LectureDao;
-import vo.LectureVo;
 
 public class LectureService {
 	private static LectureService instance = null;
@@ -22,7 +22,7 @@ public class LectureService {
 	
 	LectureDao ldao = LectureDao.getInstance();
 	
-	public List<LectureVo> lectureList() {
+	public List<Map<String,Object>> lectureList() {
 		return ldao.lectureList();
 	}
 
