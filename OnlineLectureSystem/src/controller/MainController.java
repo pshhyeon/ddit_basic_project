@@ -37,9 +37,7 @@ public class MainController {
 			}
 		}
 	}
-	
 
-	
 	private View userJoin() {
 //		USER_NO, 
 //		USER_ID,
@@ -50,37 +48,40 @@ public class MainController {
 //		USER_NAME,
 //		JOIN_DATE,
 //		DIVI_NO
-		System.out.println("1. 일반회원가입");
-		System.out.println("2. 강사회원가입");
-		System.out.println("3. home");
-		
-		int sel = ScanUtil.nextInt("메뉴 선택 : ");
-		if(sel==3) {
-			return View.HOME;
-		}
-		System.out.println();
-		System.out.println("회원가입을 진행합니다");
-		String id = ScanUtil.nextLine("ID : ");
-		String pass = ScanUtil.nextLine("PASS : ");
-		String name = ScanUtil.nextLine("이름 : ");
-		System.out.println("생년월일은 YYYYmmdd형식으로 입력해주세요!!");
-		String bir = ScanUtil.nextLine("생년월일 : ");
-		System.out.println("선택사항입니다. 작성하지 않을시 Enter를 눌러주세요");
-		String address = ScanUtil.nextLine("주소 : ");
-		System.out.println("선택사항입니다. 작성하지 않을시 Enter를 눌러주세요");
-		String hp = ScanUtil.nextLine("핸드폰번호 : ");
+
 		List<Object> param = new ArrayList<Object>();
+		System.out.println("\n회원가입을 진행합니다");
+		String id = ScanUtil.nextLine("ID : ");
 		param.add(id);
+		if (!userService.joinChk(param)) {
+			return View.USER_JOIN;
+		}
+		String pass = ScanUtil.nextLine("사용가능한 ID입니다\nPASS : ");
+		String name = ScanUtil.nextLine("이름 : ");
+		String bir = ScanUtil.nextLine("생년월일('20001231'형식으로 입력해주세요!!) : ");
+		String hp = "";
+		while (true) {
+			hp = ScanUtil.nextLine("핸드폰번호('01012345678'형식으로 입력해주세요!!) : ");
+			if (hp.matches("\\d{11}")) {
+				hp = hp.substring(0, 3) + "-" + hp.substring(3, 7) + "-" + hp.substring(7);
+				break;
+			} else {
+				System.out.println("올바르지 않은 형식입니다. 다시 입력해주세요");
+			}
+		}
+
+		String address = ScanUtil.nextLine("주소(선택사항입니다. 작성하지 않을시 Enter를 눌러주세요) : ");
+
 		param.add(pass);
-		param.add(address);
 		param.add(hp);
 		param.add(bir);
 		param.add(name);
-		boolean join = userService.join(param, sel);
-		if(join) {
-			return  (View)sessionStorage.get("page"); 
-		}
-		else {
+		param.add(address);
+
+		boolean join = userService.join(param, (int) sessionStorage.get("join"));
+		if (join) {
+			return (View) sessionStorage.get("page");
+		} else {
 			return View.USER_JOIN;
 		}
 	}
@@ -107,7 +108,7 @@ public class MainController {
 		System.out.println("3. 관리자 로그인");
 		System.out.println("4. 회원가입");
 		System.out.println("5. home");
-		int sel = ScanUtil.nextInt("메뉴 선택 : ");
+		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
 		case 2:
@@ -115,6 +116,21 @@ public class MainController {
 			sessionStorage.put("login", sel);
 			return View.LOGIN;
 		case 4:
+			// 재선택
+			while (true) {
+				System.out.println("1. 일반회원가입\n2. 강사회원가입\n3. home");
+				sel = ScanUtil.menu();
+				if (sel > 3) {
+					System.out.println("다시 선택 해주세요.");
+					continue;
+				}
+				break;
+			}
+
+			if (sel == 3) {
+				return View.HOME;
+			}
+			sessionStorage.put("join", sel);
 			return View.USER_JOIN;
 		case 5:
 			return View.HOME;

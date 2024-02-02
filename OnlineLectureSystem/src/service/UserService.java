@@ -30,23 +30,23 @@ public class UserService {
 		return false;
 	}
 
-	public boolean join(List<Object> param, int sel) {
-		if (sel != 1 && sel != 2) {
-			System.out.println("가입 유형을 다시 선택해주세요");
-			return false;
+	public boolean joinChk(List<Object> param) {
+		if (dao.joinChk(param) == null) {
+			return true;
 		}
+		System.out.println("중복된 ID입니다");
+		return false;
+	}
 
+	public boolean join(List<Object> param, int sel) {
 		UserVo user = dao.join(param, sel);
-		if (user == null) {
-			return false;
-		}
 
 		MainController.sessionStorage.put("user", user);
 		if (sel == 1) {
 			MainController.sessionStorage.put("user", View.USER_HOME);
 		}
 		if (sel == 2) {
-			MainController.sessionStorage.put("user", View.LECTURE_HOME);
+			MainController.sessionStorage.put("user", View.LECTURER_HOME);
 		}
 		return true;
 	}
