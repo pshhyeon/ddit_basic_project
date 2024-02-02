@@ -25,5 +25,9 @@ public class LectureService {
 	public List<Map<String,Object>> lectureList() {
 		return ldao.lectureList();
 	}
+	
+	public Map<String, Object> lectureDetail(List<Object> param) {
+		return ldao.lectureDetail(param);
+	}
 
 }

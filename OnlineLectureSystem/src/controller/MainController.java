@@ -47,30 +47,69 @@ public class MainController {
 			case ALL_LECTURE_LIST:
 				view = allLecture();
 				break;
-//			case LECTURE_INSERT:
-//				view = lectureInsert();
-//				break;
+			case LECTURE_DETAIL:
+				view = lectureDetail();
+				break;
+			case LECTURE_APPLY:
+				view = lectureApply();
+				break;
 			default:
 				break;
 			}
 		}
 	}
 
+	private View lectureApply() {
+		
+		
+		return null;
+	}
+
+	private View lectureDetail() {
+		List<Object> param = new ArrayList<Object>();
+		int lectureNo = (int) sessionStorage.get("lectureNo");
+		param.add(lectureNo);
+		List<Map<String, Object>> alllectureList = lectureService.lectureList();
+		System.out.println("강의 상세 조회입니다");
+		System.out.println("-----------------------");
+		Map<String, Object> map = lectureService.lectureDetail(param);
+		BigDecimal lectureno = (BigDecimal) map.get("LECTURE_NO");
+		String lectureName = (String) map.get("LECTURE_NAME");
+		String lectureContent = (String) map.get("LECTURE_CONTENT");
+		String userName = (String) map.get("USER_NAME");
+		String levlName = (String) map.get("LEVEL_NAME");
+		String bookName = (String) map.get("BOOK_NAME");
+		String bookCategory = (String) map.get("BOOKCATEGORY_NAME");
+
+		System.out.println(lectureno.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
+		System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
+		
+		System.out.println("1. 수강신청\n2. 수강신청취소\n3. 홈 ");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.LECTURE_APPLY;
+		default:
+			break;
+		}
+		return null;
+	}
+
 //	commy and push 할때 로컬에서 보내야한다 브랜치는 shun으로
 
 //github.com/pshhyeon/ddit_basic_project.git
 
-	public View userDelete() {
-		String yn = ScanUtil.nextLine("회원을 탈퇴하시겠습니까?? (y/n)");
-		if(yn.equals("y")) {
-			String pass = ScanUtil.nextLine("비밀번호 >>");
-			if (userService.delAcount(pass)) {
-				return View.HOME;	
-			}
-			System.out.println("회원탈퇴를 취소합니다.");
-		}
-		return (View)sessionStorage.get("page");
-	}
+//	public View userDelete() {
+//		String yn = ScanUtil.nextLine("회원을 탈퇴하시겠습니까?? (y/n)");
+//		if(yn.equals("y")) {
+//			String pass = ScanUtil.nextLine("비밀번호 >>");
+//			if (userService.delAcount(pass)) {
+//				return View.HOME;	
+//			}
+//			System.out.println("회원탈퇴를 취소합니다.");
+//		}
+//		return (View)sessionStorage.get("page");
+//	}
 
 	private View allLecture() {// allLecture리스트
 //		LECTURE_NO  출력리스트
@@ -95,7 +134,18 @@ public class MainController {
 			System.out.println(lectureNo.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
 			System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
 		}
-		return View.MEM_HOME;
+		System.out.println(" 1.강의 상세조회하기\n 2.강의 검색하기\n 3.홈");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.LECTURE_DETAIL;
+		case 2:
+			return View.LECTURE_SEARCH;
+		case 3:
+			return View.HOME;
+		default:
+			return View.MEM_HOME;
+		}
 	}
 
 	private View adminHome() {
@@ -161,10 +211,9 @@ public class MainController {
 		case 3:
 			sessionStorage.remove("user");
 			return View.HOME;
-		case 4:
-			sessionStorage.put("page", View.MEM_HOME);
-			userDelete();
-			return View.HOME;
+//		case 4:
+//			sessionStorage.put("page", View.MEM_HOME);
+//			userDelete();
 		default:
 			return View.HOME;
 		}
