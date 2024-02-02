@@ -60,10 +60,29 @@ public class MainController {
 	}
 
 	
-	private View allLecture() {
-		List<LectureVo> lectureList = lectureService.lectureList();
-		for(LectureVo lectureVo : lectureList) {
-			System.out.println(lectureVo);
+	private View allLecture() {//allLecture리스트
+//		LECTURE_NO  출력리스트
+//		LECTURE_NAME
+//		LECTURE_CONTENT
+//		USER_NAME
+//		LEVEL_NAME
+//		BOOK_NAME
+//		BOOKCATEGORY_NAME
+		List<Map<String,Object>> alllectureList = lectureService.lectureList();
+		System.out.println("전체 강의리스트입니다");
+		System.out.println("-----------------------");
+		for(Map<String,Object> map : alllectureList) {
+			BigDecimal lectureNo = (BigDecimal)map.get("LECTURE_NO");
+			String lectureName = (String)map.get("LECTURE_NAME");
+			String lectureContent = (String)map.get("LECTURE_CONTENT");
+			String userName = (String)map.get("USER_NAME");
+			String levlName = (String)map.get("LEVEL_NAME");
+			String bookName = (String)map.get("BOOK_NAME");
+			String bookCategory = (String)map.get("BOOKCATEGORY_NAME");
+			
+			System.out.println(lectureNo.intValue()+"\t"+lectureName+"\t"+lectureContent+"\t"+
+					userName);
+			System.out.println(levlName+"\t"+bookName+"\t"+bookCategory);
 		}
 		return View.MEM_HOME;
 	}
