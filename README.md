@@ -29,7 +29,8 @@
 ### ![ERD](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/74e86e24-2222-493c-ae71-e3b0504989b9)
 
 ### 3. DB생성
-
+![111111111](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/4da7c5a6-6238-4efd-b1fa-ef26e677d124)
+![2222222222222222](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/ea3217a7-7d96-4eaf-8d4b-5221528990b5)
 ### 4. JAVA 코딩
  - Controller <> Service <> Dao <> DB
 1. Controller: 사용자에게 정보 제공
