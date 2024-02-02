@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import util.JDBCUtil;
-import vo.LectureVo;
 
 public class LectureDao {
 	private static LectureDao instance = null;

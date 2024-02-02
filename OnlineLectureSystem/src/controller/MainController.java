@@ -47,8 +47,8 @@ public class MainController {
 			case ALL_LECTURE_LIST:
 				view = allLecture();
 				break;
-//			case ADMIN_HOME:
-//				view = adminHome();
+//			case LECTURE_INSERT:
+//				view = lectureInsert();
 //				break;
 			default:
 				break;
@@ -56,13 +56,23 @@ public class MainController {
 		}
 	}
 
-
-
 //	commy and push 할때 로컬에서 보내야한다 브랜치는 shun으로
 
 //github.com/pshhyeon/ddit_basic_project.git
-	
-	private View allLecture() {//allLecture리스트
+
+	public View userDelete() {
+		String yn = ScanUtil.nextLine("회원을 탈퇴하시겠습니까?? (y/n)");
+		if(yn.equals("y")) {
+			String pass = ScanUtil.nextLine("비밀번호 >>");
+			if (userService.delAcount(pass)) {
+				return View.HOME;	
+			}
+			System.out.println("회원탈퇴를 취소합니다.");
+		}
+		return (View)sessionStorage.get("page");
+	}
+
+	private View allLecture() {// allLecture리스트
 //		LECTURE_NO  출력리스트
 //		LECTURE_NAME
 //		LECTURE_CONTENT
@@ -70,25 +80,23 @@ public class MainController {
 //		LEVEL_NAME
 //		BOOK_NAME
 //		BOOKCATEGORY_NAME
-		List<Map<String,Object>> alllectureList = lectureService.lectureList();
+		List<Map<String, Object>> alllectureList = lectureService.lectureList();
 		System.out.println("전체 강의리스트입니다");
 		System.out.println("-----------------------");
-		for(Map<String,Object> map : alllectureList) {
-			BigDecimal lectureNo = (BigDecimal)map.get("LECTURE_NO");
-			String lectureName = (String)map.get("LECTURE_NAME");
-			String lectureContent = (String)map.get("LECTURE_CONTENT");
-			String userName = (String)map.get("USER_NAME");
-			String levlName = (String)map.get("LEVEL_NAME");
-			String bookName = (String)map.get("BOOK_NAME");
-			String bookCategory = (String)map.get("BOOKCATEGORY_NAME");
-			
-			System.out.println(lectureNo.intValue()+"\t"+lectureName+"\t"+lectureContent+"\t"+
-					userName);
-			System.out.println(levlName+"\t"+bookName+"\t"+bookCategory);
+		for (Map<String, Object> map : alllectureList) {
+			BigDecimal lectureNo = (BigDecimal) map.get("LECTURE_NO");
+			String lectureName = (String) map.get("LECTURE_NAME");
+			String lectureContent = (String) map.get("LECTURE_CONTENT");
+			String userName = (String) map.get("USER_NAME");
+			String levlName = (String) map.get("LEVEL_NAME");
+			String bookName = (String) map.get("BOOK_NAME");
+			String bookCategory = (String) map.get("BOOKCATEGORY_NAME");
+
+			System.out.println(lectureNo.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
+			System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
 		}
 		return View.MEM_HOME;
 	}
-
 
 	private View adminHome() {
 		System.out.println("환영합니다~!~! 관리자님");
@@ -141,24 +149,26 @@ public class MainController {
 		System.out.println("환영합니다~!~! 회원님");
 		System.out.println();
 		System.out.println("1. 전체 강의조회하기");
-		System.out.println("2. 강의 신청하기");
-		System.out.println("3. 내 강의");
-		System.out.println("4. 로그아웃");
+		System.out.println("2. 내 강의");
+		System.out.println("3. 내 로그아웃");
+		System.out.println("4. 회원탈퇴");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
 			return View.ALL_LECTURE_LIST;
 		case 2:
-			return View.LECTURE_APPLY;
-		case 3:
 			return View.USER_MYLECTURE;
+		case 3:
+			sessionStorage.remove("user");
+			return View.HOME;
 		case 4:
+			sessionStorage.put("page", View.MEM_HOME);
+			userDelete();
 			return View.HOME;
 		default:
 			return View.HOME;
 		}
 	}
-
 
 //github.com/pshhyeon/ddit_basic_project.git
 
@@ -174,20 +184,16 @@ public class MainController {
 //		JOIN_DATE,
 //		DIVI_NO
 
-
 		System.out.println("1. 일반회원가입\n2. 강사회원가입\3. home");
-		
+
 		int sel = ScanUtil.nextInt("메뉴 선택 : ");
-		if(sel==3) {
+		if (sel == 3) {
 			return View.HOME;
 		}
 		List<Object> param = new ArrayList<Object>();
 		System.out.println();
 		String id = ScanUtil.nextLine("ID : ");
 		param.add(id);
-		
-	
-
 
 		System.out.println("\n회원가입을 진행합니다");
 		param.add(id);
@@ -210,8 +216,6 @@ public class MainController {
 
 		String address = ScanUtil.nextLine("주소(선택사항입니다. 작성하지 않을시 Enter를 눌러주세요) : ");
 
-
-
 		param.add(pass);
 		param.add(hp);
 		param.add(bir);
@@ -233,12 +237,12 @@ public class MainController {
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
 		param.add(pass);
-		int login  = (int)sessionStorage.get("page");
+		int login = (int) sessionStorage.get("page");
 
 		if (userService.login(param, (int) sessionStorage.get("login"))) {
 			System.out.println("로그인");
 			System.out.println((UserVo) sessionStorage.get("user"));
-			return (View)sessionStorage.get("page");
+			return (View) sessionStorage.get("page");
 		} else {
 			System.out.println("로그인 실패");
 		}
