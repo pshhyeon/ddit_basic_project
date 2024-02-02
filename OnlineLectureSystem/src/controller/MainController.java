@@ -1,5 +1,6 @@
 package controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +10,8 @@ import service.LectureService;
 import service.UserService;
 import util.ScanUtil;
 import util.View;
-import vo.LectureVo;
 import vo.UserVo;
 
-// 출력부분 클래스 상속
 public class MainController {
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	UserService userService = UserService.getInstance();
@@ -47,9 +46,6 @@ public class MainController {
 			case ALL_LECTURE_LIST:
 				view = allLecture();
 				break;
-//			case :
-//				view = allLecture();
-//				break;
 //			case ADMIN_HOME:
 //				view = adminHome();
 //				break;
@@ -59,34 +55,24 @@ public class MainController {
 		}
 	}
 
-	
-	private View allLecture() {//allLecture리스트
-//		LECTURE_NO  출력리스트
-//		LECTURE_NAME
-//		LECTURE_CONTENT
-//		USER_NAME
-//		LEVEL_NAME
-//		BOOK_NAME
-//		BOOKCATEGORY_NAME
-		List<Map<String,Object>> alllectureList = lectureService.lectureList();
+	private View allLecture() {// allLecture리스트
+		List<Map<String, Object>> alllectureList = lectureService.lectureList();
 		System.out.println("전체 강의리스트입니다");
 		System.out.println("-----------------------");
-		for(Map<String,Object> map : alllectureList) {
-			BigDecimal lectureNo = (BigDecimal)map.get("LECTURE_NO");
-			String lectureName = (String)map.get("LECTURE_NAME");
-			String lectureContent = (String)map.get("LECTURE_CONTENT");
-			String userName = (String)map.get("USER_NAME");
-			String levlName = (String)map.get("LEVEL_NAME");
-			String bookName = (String)map.get("BOOK_NAME");
-			String bookCategory = (String)map.get("BOOKCATEGORY_NAME");
-			
-			System.out.println(lectureNo.intValue()+"\t"+lectureName+"\t"+lectureContent+"\t"+
-					userName);
-			System.out.println(levlName+"\t"+bookName+"\t"+bookCategory);
+		for (Map<String, Object> map : alllectureList) {
+			BigDecimal lectureNo = (BigDecimal) map.get("LECTURE_NO");
+			String lectureName = (String) map.get("LECTURE_NAME");
+			String lectureContent = (String) map.get("LECTURE_CONTENT");
+			String userName = (String) map.get("USER_NAME");
+			String levlName = (String) map.get("LEVEL_NAME");
+			String bookName = (String) map.get("BOOK_NAME");
+			String bookCategory = (String) map.get("BOOKCATEGORY_NAME");
+
+			System.out.println(lectureNo.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
+			System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
 		}
 		return View.MEM_HOME;
 	}
-
 
 	private View adminHome() {
 		System.out.println("환영합니다~!~! 관리자님\n");
@@ -134,26 +120,37 @@ public class MainController {
 	}
 
 	private View memHome() {
-		System.out.println("환영합니다~!~! 회원님\n");
-		System.out.println("1. 전체 강의조회하기");
-		System.out.println("2. 강의 신청하기");
-		System.out.println("3. 내 강의");
-		System.out.println("4. 로그아웃");
+		System.out.println("1. 전체 강의 조회하기");
+		System.out.println("2. 내 강의실");
+		System.out.println("3. 로그아웃");
+		System.out.println("4. 회원 탈퇴");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.ALL_LECTURE_LIST;
+			return View.ALL_LECTURER_LIST;
 		case 2:
-			return View.LECTURE_APPLY;
-		case 3:
 			return View.USER_MYLECTURE;
+		case 3:
+			sessionStorage.clear();
+			return View.HOME;
 		case 4:
-			return View.HOME;
+			sessionStorage.put("page", View.MEM_HOME);
+			return userDelete();
 		default:
-			return View.HOME;
+			return View.MEM_HOME;
 		}
-		
-		
+
+	}
+
+	public View userDelete() {
+		String yn = ScanUtil.nextLine("회원을 탈퇴하시겠습니까?? (y/n)");
+		if (yn.equals("y")) {
+			String pass = ScanUtil.nextLine("비밀번호 >>");
+			return userService.delAcount(pass);
+		}
+		System.out.println("회원탈퇴를 취소합니다.");
+
+		return (View) sessionStorage.get("page");
 	}
 
 	private View userJoin() {
@@ -203,9 +200,10 @@ public class MainController {
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
 		param.add(pass);
+
 		if (userService.login(param, (int) sessionStorage.get("login"))) {
-			System.out.println("로그인");
-			System.out.println((UserVo) sessionStorage.get("user"));
+			System.out.println(((UserVo) sessionStorage.get("user")).getUser_id() + "님 환영합니다.");
+			return (View) sessionStorage.get("page");
 		} else {
 			System.out.println("로그인 실패");
 		}
@@ -236,7 +234,6 @@ public class MainController {
 				}
 				break;
 			}
-
 			if (sel == 3) {
 				return View.HOME;
 			}

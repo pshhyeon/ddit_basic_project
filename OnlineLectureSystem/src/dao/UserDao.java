@@ -3,11 +3,12 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+import controller.MainController;
 import util.JDBCUtil;
 import vo.UserVo;
 
 public class UserDao {
-	
+
 	private static UserDao instance = null;
 
 	private UserDao() {
@@ -36,23 +37,27 @@ public class UserDao {
 	}
 
 	public UserVo join(List<Object> param, int sel) {
-		String sql = "  INSERT INTO USER_ (USER_NO, USER_ID, USER_PASS, USER_HP, USER_BIR, USER_NAME, JOIN_DATE, DIVI_NO ,USER_ADDRESS ) \r\n" + 
-				" VALUES((SELECT NVL(MAX(USER_NO)+1, 1) FROM USER_), ?, ?, ?, TO_DATE(?,'YYYY/MM/DD'),?, SYSDATE, " + sel;
-		
-		if(param.get(param.size() - 1) == null) {
+		String sql = "  INSERT INTO USER_ (USER_NO, USER_ID, USER_PASS, USER_HP, USER_BIR, USER_NAME, JOIN_DATE, DIVI_NO ,USER_ADDRESS ) \r\n"
+				+ " VALUES((SELECT NVL(MAX(USER_NO)+1, 1) FROM USER_), ?, ?, ?, TO_DATE(?,'YYYY/MM/DD'),?, SYSDATE, "
+				+ sel;
+
+		if (param.get(param.size() - 1) == null) {
 			sql += ", null ) ";
 			param.remove(param.size() - 1);
-		}else {
-			sql  += " , ?) ";
+		} else {
+			sql += " , ?) ";
 		}
-		
-		
+
 		jdbc.update(sql, param);
 
-		sql = " SELECT * FROM  USER_ WHERE USER_ID = " + (String)param.get(0);
+		sql = " SELECT * FROM  USER_ WHERE USER_ID = " + (String) param.get(0);
 		return jdbc.selectOne(sql, UserVo.class);
 	}
 
+	public void delAcount(String id) {
+		String sql = " UPDATE  USER_  SET DELYN = 'Y' WHERE USER_ID = '" + id + "'";
+
+		jdbc.update(sql);
+	}
+
 }
-
-
