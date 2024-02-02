@@ -27,11 +27,6 @@ public class UserDao {
 				+ " WHERE USER_ID = ? \r\n " + "   AND USER_PASS = ? \r\n "
 				+ "   AND DIVI_NO = (SELECT DIVI_NO FROM USER_DIVI WHERE DIVI_NO = " + sel + " ) ";
 
-<<<<<<< HEAD
-=======
-	     
-		
->>>>>>> refs/remotes/origin/shun
 		return jdbc.selectOne(sql, param, UserVo.class);
 	}
 
