@@ -23,8 +23,21 @@ public class UserService {
 	UserDao dao = UserDao.getInstance();
 
 	public boolean login(List<Object> param, int sel) {
-		MainController.sessionStorage.put("user", dao.login(param, sel));
-		if (MainController.sessionStorage.get("user") != null) {
+		UserVo user = dao.login(param, sel);
+		MainController.sessionStorage.put("user", user);
+		if (user != null) {
+			switch(user.getDivi_no()){
+				case 1:
+					MainController.sessionStorage.put("page", View.MEM_HOME);
+					break;
+				case 2:
+					MainController.sessionStorage.put("page", View.LECTURER_HOME);
+					break;
+				case 3:
+					MainController.sessionStorage.put("page", View.ADMIN_HOME);
+					break;
+			}
+			
 			return true;
 		}
 		return false;

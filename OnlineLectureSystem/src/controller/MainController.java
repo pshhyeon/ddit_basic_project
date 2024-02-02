@@ -58,7 +58,6 @@ public class MainController {
 			}
 		}
 	}
-//	commy and push 할때 로컬에서 보내야한다 브랜치는 shun으로
 
 	
 	private View allLecture() {
@@ -71,8 +70,7 @@ public class MainController {
 
 
 	private View adminHome() {
-		System.out.println("환영합니다~!~! 관리자님");
-		System.out.println();
+		System.out.println("환영합니다~!~! 관리자님\n");
 		System.out.println("1. 일반회원 조회하기");
 		System.out.println("2. 강사 조회하기");
 		System.out.println("3. 전체회원조회하기");
@@ -96,8 +94,7 @@ public class MainController {
 	}
 
 	private View lecturerHome() {
-		System.out.println("환영합니다~!~! 강사님");
-		System.out.println();
+		System.out.println("환영합니다~!~! 강사님\n");
 		System.out.println("1. 강의 등록하기");
 		System.out.println("2. 내 강의");
 		System.out.println("3. 책 등록");
@@ -118,8 +115,7 @@ public class MainController {
 	}
 
 	private View memHome() {
-		System.out.println("환영합니다~!~! 회원님");
-		System.out.println();
+		System.out.println("환영합니다~!~! 회원님\n");
 		System.out.println("1. 전체 강의조회하기");
 		System.out.println("2. 강의 신청하기");
 		System.out.println("3. 내 강의");
@@ -142,15 +138,6 @@ public class MainController {
 	}
 
 	private View userJoin() {
-//		USER_NO, 
-//		USER_ID,
-//		USER_PASS,
-//		USER_ADDRESS,
-//		USER_HP,
-//		USER_BIR,
-//		USER_NAME,
-//		JOIN_DATE,
-//		DIVI_NO
 
 		List<Object> param = new ArrayList<Object>();
 		System.out.println("\n회원가입을 진행합니다");
@@ -163,6 +150,7 @@ public class MainController {
 		String name = ScanUtil.nextLine("이름 : ");
 		String bir = ScanUtil.nextLine("생년월일('20001231'형식으로 입력해주세요!!) : ");
 		String hp = "";
+		// 나중에 service로 빼기
 		while (true) {
 			hp = ScanUtil.nextLine("핸드폰번호('01012345678'형식으로 입력해주세요!!) : ");
 			if (hp.matches("\\d{11}")) {
