@@ -6,13 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import print.LecturePrint;
 import service.LectureService;
 import service.UserService;
 import util.ScanUtil;
 import util.View;
+import vo.LectureCategoryVo;
+import vo.LectureVo;
 import vo.UserVo;
 
-public class MainController {
+public class MainController extends LecturePrint{
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	UserService userService = UserService.getInstance();
 	LectureService lectureService = LectureService.getInstance();
@@ -49,6 +52,30 @@ public class MainController {
 			case LECTURE_DETAIL:
 				view = lectureDetail();
 				break;
+			case ALL_LEVIEW_LIST:
+				view = lectureDetail();
+				break;
+			case BOOK_INSERT:
+				view = lectureDetail();
+				break;
+			case BOOK_LIST:
+				view = lectureDetail();
+				break;
+			case LECTURE_APPLY:
+				view = lectureDetail();
+				break;
+			case LECTURE_INSERT:
+				view = lectureDetail();
+				break;
+			case LECTURE_SEARCH:
+				lectureSearch();
+				break;
+			case LECTURER_MYLECTURE:
+				break;
+			case MEM_LIST:
+				break;
+			case USER_MYLECTURE:
+				break;
 			default:
 				break;
 			}
@@ -84,7 +111,69 @@ public class MainController {
 		}
 		return null;
 	}
+	private View lectureSearch() {
+		System.out.println("1. 이름 검색");
+		System.out.println("2. 강의 카테고리 검색");
+		System.out.println("3. 전체 검색");
 
+		List<Object> param = new ArrayList<Object>();
+		int sel = ScanUtil.menu();
+		if (sel == 1|| sel == 3) {
+			String name = ScanUtil.nextLine("이름: ");
+			param.add(name);
+		}
+		if (sel == 2 || sel ==3) {
+			List<LectureCategoryVo> cateList = lectureService.lectureCtegoryList();
+			for(LectureCategoryVo l : cateList) {
+				System.out.println(l);
+			}
+			String type = ScanUtil.nextLine("카테고리 번호 선택: ");
+			param.add(type);
+		}
+
+		List<Map<String, Object>> lectureList = lectureService.lectureList(param, sel);
+		System.out.println("검색된 강의리스트입니다");
+		System.out.println("-----------------------");
+		for (Map<String, Object> map : lectureList) {
+			BigDecimal lectureNo = (BigDecimal) map.get("LECTURE_NO");
+			String lectureName = (String) map.get("LECTURE_NAME");
+			String lectureContent = (String) map.get("LECTURE_CONTENT");
+			String userName = (String) map.get("USER_NAME");
+			String levlName = (String) map.get("LEVEL_NAME");
+			String bookName = (String) map.get("BOOK_NAME");
+			String bookCategory = (String) map.get("CATEGORY_NAME");
+
+			System.out.println(lectureNo.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
+			System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
+		}
+		
+		// 강사
+		if (((UserVo)(sessionStorage.get("user"))).getDivi_no() == 2) {
+			System.out.println("1. 강의 상세페이지");
+			System.out.println("2. 강의 검색");
+			System.out.println("3. 강의 등록");
+			System.out.println("4. 홈");
+
+			int sel2 = ScanUtil.nextInt("메뉴 선택 : ");
+			switch (sel2) {
+			case 1:
+				return View.LECTURE_DETAIL;
+			case 2:
+				return View.LECTURE_SEARCH;
+			case 3:
+				return View.LECTURE_INSERT;
+			case 4:
+				return View.LECTURER_HOME;
+			default:
+				return View.ALL_LECTURE_LIST;
+			}
+		}
+
+		// 일반 회원
+
+
+		return View.ALL_LECTURE_LIST;
+	}
 	
 	private View allLecture() {// allLecture리스트
 		List<Map<String, Object>> alllectureList = lectureService.lectureList();
@@ -97,13 +186,37 @@ public class MainController {
 			String userName = (String) map.get("USER_NAME");
 			String levlName = (String) map.get("LEVEL_NAME");
 			String bookName = (String) map.get("BOOK_NAME");
-			String bookCategory = (String) map.get("BOOKCATEGORY_NAME");
+			String bookCategory = (String) map.get("CATEGORY_NAME");
 
 			System.out.println(lectureNo.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
 			System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
 		}
-		sessionStorage.put("lectureNo", 1);
-		return View.LECTURE_DETAIL;
+		
+		// 사용자
+		
+		// 강사
+		if (((UserVo)(sessionStorage.get("user"))).getDivi_no() == 2) {
+			System.out.println("1. 강의 상세페이지");
+			System.out.println("2. 강의 검색");
+			System.out.println("3. 강의 등록");
+			System.out.println("4. 홈");
+
+			int sel = ScanUtil.nextInt("메뉴 선택 : ");
+			switch (sel) {
+			case 1:
+				return View.LECTURE_DETAIL;
+			case 2:
+				return View.LECTURE_SEARCH;
+			case 3:
+				return View.LECTURE_INSERT;
+			case 4:
+				return View.LECTURER_HOME;
+			default:
+				return View.ALL_LECTURE_LIST;
+			}
+		}
+		
+		return View.ALL_LECTURE_LIST;
 	}
 
 	private View adminHome() {
@@ -131,23 +244,24 @@ public class MainController {
 	}
 
 	private View lecturerHome() {
-		System.out.println("환영합니다~!~! 강사님\n");
-		System.out.println("1. 강의 등록하기");
-		System.out.println("2. 내 강의");
-		System.out.println("3. 책 등록");
-		System.out.println("4. 로그아웃");
+		System.out.println("1. 내강의 조회하기");
+		System.out.println("2. 내 책 조회");
+		System.out.println("3. 로그아웃");
+		System.out.println("4. 회원 탈퇴");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.LECTURE_INSERT;
+			return View.ALL_LECTURE_LIST;
 		case 2:
-			return View.LECTURER_MYLECTURE;
+			return View.BOOK_LIST;
 		case 3:
-			return View.BOOK_INSERT;
+			sessionStorage.clear();
+			return View.HOME;
 		case 4:
-			return View.HOME;
+			sessionStorage.put("page", View.LECTURER_HOME);
+			return userDelete();
 		default:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		}
 	}
 
