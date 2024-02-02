@@ -23,6 +23,11 @@ public class LectureService {
 	public List<Map<String,Object>> lectureList() {
 		return dao.lectureList();
 	}
+	
+	public Map<String, Object> lectureDetail(List<Object> param) {
+		return dao.lectureDetail(param);
+	}
+
 
 }
 

@@ -46,15 +46,46 @@ public class MainController {
 			case ALL_LECTURE_LIST:
 				view = allLecture();
 				break;
-//			case ADMIN_HOME:
-//				view = adminHome();
-//				break;
+			case LECTURE_DETAIL:
+				view = lectureDetail();
+				break;
 			default:
 				break;
 			}
 		}
 	}
 
+	private View lectureDetail() {
+		List<Object> param = new ArrayList<Object>();
+		int lectureNo = (int) sessionStorage.get("lectureNo");
+		param.add(lectureNo);
+		List<Map<String, Object>> alllectureList = lectureService.lectureList();
+		System.out.println("강의 상세 조회입니다");
+		System.out.println("-----------------------");
+		Map<String, Object> map = lectureService.lectureDetail(param);
+		BigDecimal lectureno = (BigDecimal) map.get("LECTURE_NO");
+		String lectureName = (String) map.get("LECTURE_NAME");
+		String lectureContent = (String) map.get("LECTURE_CONTENT");
+		String userName = (String) map.get("USER_NAME");
+		String levlName = (String) map.get("LEVEL_NAME");
+		String bookName = (String) map.get("BOOK_NAME");
+		String bookCategory = (String) map.get("BOOKCATEGORY_NAME");
+
+		System.out.println(lectureno.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
+		System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
+		
+		System.out.println("1. 수강신청\n2. 수강신청취소\n3. 홈 ");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.LECTURE_APPLY;
+		default:
+			break;
+		}
+		return null;
+	}
+
+	
 	private View allLecture() {// allLecture리스트
 		List<Map<String, Object>> alllectureList = lectureService.lectureList();
 		System.out.println("전체 강의리스트입니다");
@@ -71,7 +102,8 @@ public class MainController {
 			System.out.println(lectureNo.intValue() + "\t" + lectureName + "\t" + lectureContent + "\t" + userName);
 			System.out.println(levlName + "\t" + bookName + "\t" + bookCategory);
 		}
-		return View.MEM_HOME;
+		sessionStorage.put("lectureNo", 1);
+		return View.LECTURE_DETAIL;
 	}
 
 	private View adminHome() {
@@ -127,7 +159,7 @@ public class MainController {
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.ALL_LECTURER_LIST;
+			return View.ALL_LECTURE_LIST;
 		case 2:
 			return View.USER_MYLECTURE;
 		case 3:
