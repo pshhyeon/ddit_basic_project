@@ -58,12 +58,7 @@ public class MainController {
 			}
 		}
 	}
-<<<<<<< HEAD
-//	commy and push 할때 로컬에서 보내야한다 브랜치는 shun으로
-=======
->>>>>>> branch 'main' of https://github.com/pshhyeon/ddit_basic_project.git
 
-<<<<<<< HEAD
 	
 	private View allLecture() {
 		List<LectureVo> lectureList = lectureService.lectureList();
@@ -144,8 +139,7 @@ public class MainController {
 		
 	}
 
-=======
->>>>>>> branch 'main' of https://github.com/pshhyeon/ddit_basic_project.git
+//github.com/pshhyeon/ddit_basic_project.git
 	private View userJoin() {
 //		USER_NO, 
 //		USER_ID,
@@ -156,7 +150,7 @@ public class MainController {
 //		USER_NAME,
 //		JOIN_DATE,
 //		DIVI_NO
-<<<<<<< HEAD
+
 		System.out.println("1. 일반회원가입\n2. 강사회원가입\3. home");
 		
 		int sel = ScanUtil.nextInt("메뉴 선택 : ");
@@ -177,7 +171,7 @@ public class MainController {
 		String address = ScanUtil.nextLine("주소 : ");
 		System.out.println("선택사항입니다. 작성하지 않을시 Enter를 눌러주세요");
 		String hp = ScanUtil.nextLine("핸드폰번호 : ");
-=======
+
 
 		List<Object> param = new ArrayList<Object>();
 		System.out.println("\n회원가입을 진행합니다");
@@ -202,7 +196,7 @@ public class MainController {
 
 		String address = ScanUtil.nextLine("주소(선택사항입니다. 작성하지 않을시 Enter를 눌러주세요) : ");
 
->>>>>>> branch 'main' of https://github.com/pshhyeon/ddit_basic_project.git
+//github.com/pshhyeon/ddit_basic_project.git
 		param.add(pass);
 		param.add(hp);
 		param.add(bir);
