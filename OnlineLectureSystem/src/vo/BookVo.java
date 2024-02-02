@@ -8,5 +8,6 @@ public class BookVo {
 	private String book_name;
 	private String book_content;
 	private int category_no;
+
 	
 }
