@@ -5,6 +5,7 @@ import java.util.Map;
 
 import controller.MainController;
 import util.JDBCUtil;
+import vo.MyHomeVo;
 import vo.UserVo;
 
 public class UserDao {
@@ -23,6 +24,16 @@ public class UserDao {
 
 	JDBCUtil jdbc = JDBCUtil.getInstance();
 
+	public List<MyHomeVo> myhomeinput() {
+		UserVo user = (UserVo)MainController.sessionStorage.get("user");
+		String sql = " SELECT USER_NO AS USER_NO,\r\n" + 
+				"       LECTURE_NO AS LECTURE_NO,\r\n" + 
+				"       TO_CHAR(LECTURE_START) AS LECTURE_START,\r\n" + 
+				"       TO_CHAR(LECTURE_FINISH) AS LECTURE_FINISH\r\n" + 
+				"FROM MYHOME WHERE USER_NO = " + user.getUser_no();
+		return jdbc.selectList(sql, MyHomeVo.class);
+	}
+	
 	public UserVo login(List<Object> param, int sel) {
 		String sql = " SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD'), USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD'), DIVI_NO FROM USER_  \r\n "
 				+ " WHERE USER_ID = ? \r\n " + "   AND USER_PASS = ? \r\n "

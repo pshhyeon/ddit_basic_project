@@ -6,6 +6,7 @@ import controller.MainController;
 import dao.UserDao;
 import util.ScanUtil;
 import util.View;
+import vo.MyHomeVo;
 import vo.UserVo;
 
 public class UserService {
@@ -22,6 +23,10 @@ public class UserService {
 	}
 
 	UserDao dao = UserDao.getInstance();
+	
+	public List<MyHomeVo> myHomeList() {
+		return dao.myhomeinput();
+	}
 
 	public boolean login(List<Object> param, int sel) {
 		UserVo user = dao.login(param, sel);

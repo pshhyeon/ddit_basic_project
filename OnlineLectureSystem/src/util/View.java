@@ -1,7 +1,7 @@
 package util;
 
 public enum View {
-	
+//	1. 리뷰남기기\n2. 수강신청취소\n3. 내 강의 자세히보기
 	   HOME, // 홈
 	   LOGIN, // 로그인
 	   USER_JOIN, // 회원가입
@@ -19,7 +19,14 @@ public enum View {
 	   ALL_LEVIEW_LIST, // 전체 리뷰 페이지
 	   LECTURE_DETAIL, // 강의 상세 페이지
 	   LECTURE_SEARCH, // 강의 검색 페이지
-	   LECTURE_APPLY_LIST //수강신청내역 확인하기
+	   LECTURE_APPLY_LIST, //수강신청내역 확인하기
+	   PAST_LECTURE_APPLY_LIST, //과거수강신청내역확인하기
+	   MAKING_REVIEW,//리뷰남기기
+	   LECTURE_CANCEL,//수강신청취소
+	   MYLECTURE_DETAIL, //내 강의 자세히보기
+	   REVIEW_LIST,//전체리뷰보기
+	   REVIEW_UPDATE // 리뷰업데이트
+	   
 	
 	
 	
