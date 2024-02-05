@@ -26,7 +26,7 @@ public class ReviewDao {
 		jdbc.update(sql,param);
 
 	}
-	public List<ReviewVo> reviewlist() {
+	public List<ReviewVo> reviewlist(int userNo) {
 		String sql =" SELECT REVIEW_NO AS REVIEW_NO,\r\n" + 
 				"       CONTENT AS CONTENT,\r\n" + 
 				"       RATED AS RATED,\r\n" + 
@@ -34,20 +34,39 @@ public class ReviewDao {
 				"       USER_NO AS USER_NO,\r\n" + 
 				"       LECTURE_NO AS LECTURE_NO\r\n" + 
 				"       \r\n" + 
-				"FROM REVIEW ";
+				"FROM REVIEW WHERE USER_NO = "+userNo;
 		   return jdbc.selectList(sql, ReviewVo.class);
 		   
 	}
-	public void reviewUpdate(List<Object> param ) {
+	public int reviewUpdate(List<Object> param ) {
 		
 		String sql = " UPDATE REVIEW\r\n" + 
-				"SET REVIEW_NO = (SELECT MAX(LECTURE_NO)+1 FROM REVIEW), CONTENT = ? , RATED = ?\r\n" + 
-				"WHERE USER_NO = ?\r\n" + 
-				"AND LECTURE_NO = ? ";
+				"SET CONTENT = ? , RATED = ? \r\n " + 
+				"WHERE USER_NO = ? AND LECTURE_NO = ? ";
 		
 		jdbc.update(sql,param);
+		
+		sql = " SELECT REVIEW_NO FROM REVIEW WHERE USER_NO =" +param.get(2)+ "AND LECTURE_NO = "+ param.get(3);
+		ReviewVo review = (ReviewVo)jdbc.selectOne(sql,ReviewVo.class);
+		return review.getReview_no();
 	}
 	
+	public ReviewVo reviewChk(List<Object> param) {
+		String sql = " SELECT REVIEW_NO FROM REVIEW WHERE USER_NO = ? AND LECTURE_NO = ? ";
+		return jdbc.selectOne(sql, param, ReviewVo.class);
+	}
 	
+	 public ReviewVo reviewDetail(int reviewnum) {
+	      String sql = " SELECT REVIEW_NO AS REVIEW_NO,\r\n" + 
+	            "CONTENT AS CONTENT,\r\n" + 
+	            "RATED AS RATED,\r\n" + 
+	            "TO_CHAR(REVIEW_DATE) AS REVIEW_DATE,+ \r\n" + 
+	            "USER_NO AS USER_NO,\r\n" + 
+	            "LECTURE_NO AS LECTURE_NO \r\n" + 
+	            "FROM REVIEW \r\n" + 
+	            "WHERE REVIEW_NO =  " + reviewnum;
+	      return jdbc.selectOne(sql,ReviewVo.class);
+	   }
+
 
 }

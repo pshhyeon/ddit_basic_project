@@ -23,7 +23,7 @@ public class UserDao {
 	}
 
 	JDBCUtil jdbc = JDBCUtil.getInstance();
-
+	
 	public List<MyHomeVo> myhomeinput() {
 		UserVo user = (UserVo)MainController.sessionStorage.get("user");
 		String sql = " SELECT USER_NO AS USER_NO,\r\n" + 
@@ -33,7 +33,7 @@ public class UserDao {
 				"FROM MYHOME WHERE USER_NO = " + user.getUser_no();
 		return jdbc.selectList(sql, MyHomeVo.class);
 	}
-	
+
 	public UserVo login(List<Object> param, int sel) {
 		String sql = " SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD'), USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD'), DIVI_NO FROM USER_  \r\n "
 				+ " WHERE USER_ID = ? \r\n " + "   AND USER_PASS = ? \r\n "
@@ -61,7 +61,7 @@ public class UserDao {
 
 		jdbc.update(sql, param);
 
-		sql = " SELECT * FROM  USER_ WHERE USER_ID = " + (String) param.get(0);
+		sql = " SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD'), USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD'), DIVI_NO, DELYN FROM  USER_ WHERE USER_ID = '" + (String)param.get(0) + "' ";
 		return jdbc.selectOne(sql, UserVo.class);
 	}
 

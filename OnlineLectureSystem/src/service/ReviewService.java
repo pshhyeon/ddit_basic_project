@@ -23,12 +23,20 @@ public class ReviewService {
 	public void makingReview(List<Object> param) {
 		dao.makingReview(param);
 	}
-	public List<ReviewVo> reviewList() {
-		return dao.reviewlist();
+	public List<ReviewVo> reviewList(int userNo) {
+		return dao.reviewlist(userNo);
 	}
-	public void reviewUpdate(List<Object> param) {
-		dao.reviewUpdate(param);
+	public int reviewUpdate(List<Object> param) {
+		return dao.reviewUpdate(param);
 	}
 	
+	public ReviewVo reviewChk(List<Object> param) {
+		return dao.reviewChk(param);
+	}
+	
+	public ReviewVo reviewDetail(int reviewnum) {
+	      return dao.reviewDetail(reviewnum);
+	   }
+
 
 }
