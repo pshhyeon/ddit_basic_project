@@ -124,16 +124,42 @@ public class MainController extends LecturePrint {
 			case REPLY_LIST:
 				view = replyList();
 				break;
-//			case REPLY_REVIEW:
-//				view = replyReview();
-//				break;
+			case REPLY_UPDATE: // 2번째
+				view = replyUpdate();
+				break;
 			default:
 				break;
 			}
 		}
 	}
 
-	private View replyList() {
+	private View replyUpdate() {//(추가본) 1번째
+
+		System.out.println("답변 수정하기를 진행합니다");
+		sessionStorage.get("reviewNum");
+		((UserVo) sessionStorage.get("user")).getUser_no();
+		String replycontent = ScanUtil.nextLine("수정할 강의 답변내용을 적어주세요");
+		
+		List<Object> param = new ArrayList<Object>();
+		param.add(replycontent);
+		param.add(sessionStorage.get("reviewNum"));
+		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
+		replyService.replyUpdate(param);
+		System.out.println("수정이 완료되었습니다.");
+		int sel = ScanUtil.nextInt("1. 내 강의전체 리스트보기\n2. 내 강의 \n3 홈");
+		switch (sel) {
+		case 1:
+			return View.LECTURER_LECTURE_LIST;
+		case 2:
+			return View.LECTURER_MYLECTURE;
+		case 3:
+			return View.HOME;
+		default:
+			return View.HOME;
+		}
+	}
+
+	private View replyList() {  //(추가본)
 //		 REPLY_CONTENT,
 //	     REPLY_DATE,
 //	     REVIEW_NO
@@ -167,10 +193,11 @@ public class MainController extends LecturePrint {
 		switch (sel) {
 		case 1:
 			 return View.REPLY_LIST;
+		case 2:
+			 return View.REPLY_UPDATE;
 		default:
-			break;
+			 return View.HOME;
 		}
-		return null;
 	}
 
 	private View lectureReview() {//강사님 강의 review리스트

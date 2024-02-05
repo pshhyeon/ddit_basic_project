@@ -52,6 +52,8 @@ public class ReviewDao {
 		ReviewVo review = (ReviewVo)jdbc.selectOne(sql,ReviewVo.class);
 		return review.getReview_no();
 	}
+	
+	
 	public void reviewDelete(List<Object> param) {
 		String sql = " UPDATE REVIEW\r\n" + 
 				" SET DELYN = 'Y'\r\n" + 

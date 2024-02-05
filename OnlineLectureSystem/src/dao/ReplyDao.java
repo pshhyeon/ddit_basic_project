@@ -27,9 +27,17 @@ public class ReplyDao {
 	}
 
 	public List<Map<String, Object>> replyList(List<Object> param) {
-		String sql = " SELECT REPLY_CONTENT AS REPLY_CONTENT,\r\n" + " TO_CHAR(REPLY_DATE) AS REPLY_DATE,\r\n"
+		String sql = " SELECT REPLY_CONTENT AS REPLY_CONTENT,\r\n" + "       TO_CHAR(REPLY_DATE) AS REPLY_DATE,\r\n"
 				+ "       REVIEW_NO AS REVIEW_NO\r\n" + "FROM REPLY\r\n" + "WHERE USER_NO = ? ";
 		return jdbc.selectList(sql, param);
+	}
+	
+	public void replyUpdate(List<Object> param) { // 3번째
+		String sql = " UPDATE REPLY\r\n" + 
+				"SET REPLY_CONTENT = ?\r\n" + 
+				"WHERE REVIEW_NO = ?\r\n" + 
+				"AND USER_NO= ?  "; 
+		jdbc.update(sql,param);
 	}
 
 }

@@ -27,4 +27,8 @@ public class ReplyService {
 		return dao.replyList(param);
 	}
 	
+	public void replyUpdate(List<Object> param) { //4 번째
+		dao.replyUpdate(param);
+	}
+	
 }
