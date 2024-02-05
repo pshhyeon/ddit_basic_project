@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+import java.util.Map;
 
 import util.JDBCUtil;
 
@@ -24,6 +25,23 @@ public class BookDao {
 				"VALUES((SELECT MAX(BOOK_NO)+1 FROM BOOK),?,?,?) ";
 		jdbc.update(sql, param);
 
+	}
+	public List<Map<String, Object>> bookList() {
+		String sql = "  SELECT B.BOOK_NO AS BOOK_NO,\r\n" + 
+				"       B.BOOK_NAME AS BOOK_NAME,\r\n" + 
+				"       B.BOOK_CONTENT AS BOOK_CONTENT,\r\n" + 
+				"       BC.BOOKCATEGORY_NAME  AS BOOKCATEGORY_NAME\r\n" + 
+				"FROM BOOK B , BOOK_CATEGORY BC\r\n" + 
+				"WHERE B.BOOKCATEGORY_NO = BC.BOOKCATEGORY_NO\r\n" + 
+				"AND B.BOOK_DELYN IS NULL ";
+		return jdbc.selectList(sql);
+	}
+	
+	public void bookDelete(int booksell) {
+		String sql = " UPDATE BOOK\r\n" + 
+				"SET BOOK_DELYN = 'Y'\r\n" + 
+				"WHERE BOOK_NO = " + booksell;
+		jdbc.update(sql);
 	}
 
 }

@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import dao.ReviewDao;
 import vo.ReviewVo;
@@ -36,7 +37,14 @@ public class ReviewService {
 	
 	public ReviewVo reviewDetail(int reviewnum) {
 	      return dao.reviewDetail(reviewnum);
-	   }
+	  }
+	public void reviewDelete(List<Object> param) {
+		 dao.reviewDelete(param);
+	}
+	public List<Map<String, Object>> lectureReview(List<Object> param) {
+		return dao.lectureReview(param);
+	}
+
 
 
 }

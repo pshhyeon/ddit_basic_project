@@ -200,5 +200,43 @@ public class LectureDao {
 				" AND M.USER_NO = ? ";
 		return jdbc.selectList(sql, param);
 	}
+	
+	public List<Map<String, Object>> lecturer_lecture_List(List<Object> param) {
+		String sql = " SELECT DISTINCT L.LECTURE_NO AS LECTURE_NO,\r\n" + 
+				"       L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
+				"       L.LECTURE_CONTENT AS LECTURE_CONTENT,\r\n" + 
+				"       C.CATEGORY_NAME AS CATEGORY_NAME,\r\n" + 
+				"       LE.LEVEL_NAME AS LEVEL_NAME,\r\n" + 
+				"       B.BOOK_NAME AS BOOK_NAME\r\n" + 
+				"FROM LECTURE L , USER_ U , \"CATEGORY\" C , \"LEVEL\" LE , BOOK B\r\n" + 
+				"WHERE L.BOOK_NO = B.BOOK_NO\r\n" + 
+				"AND L.LEVEL_NO = LE.LEVEL_NO\r\n" + 
+				"AND L.CATEGORY_NO = C.CATEGORY_NO\r\n" + 
+				"AND L.USER_NO = ? ";
+		return jdbc.selectList(sql,param);
+	}
+	
+	public Map<String, Object> lecturer_lecture_detail(List<Object> param) {
+		String sql = "SELECT DISTINCT L.LECTURE_NO AS LECTURE_NO,\r\n" + 
+				"       L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
+				"       L.LECTURE_CONTENT AS LECTURE_CONTENT,\r\n" + 
+				"       C.CATEGORY_NAME AS CATEGORY_NAME,\r\n" + 
+				"       LE.LEVEL_NAME AS LEVEL_NAME,\r\n" + 
+				"       B.BOOK_NAME AS BOOK_NAME\r\n" + 
+				"FROM LECTURE L , USER_ U , \"CATEGORY\" C , \"LEVEL\" LE , BOOK B\r\n" + 
+				"WHERE L.BOOK_NO = B.BOOK_NO\r\n" + 
+				"AND L.LEVEL_NO = LE.LEVEL_NO\r\n" + 
+				"AND L.CATEGORY_NO = C.CATEGORY_NO\r\n" + 
+				"AND L.USER_NO = ?\r\n" + 
+				"AND L.LECTURE_NO= ?";
+		return jdbc.selectOne(sql, param);
+	}
+	
+	public void lectureUpdate(List<Object> param) {
+		String sql = " UPDATE LECTURE\r\n" + 
+				"SET LECTURE_NAME = ? ,LECTURE_CONTENT = ?, CATEGORY_NO = ? , LEVEL_NO = ?, BOOK_NO = ?\r\n" + 
+				"WHERE LECTURE_NO = ? ";
+		jdbc.update(sql,param);
+	}
    
 }

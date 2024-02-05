@@ -25,5 +25,16 @@ public enum View {
 	MYLECTURE_DETAIL, // 내 강의 자세히보기
 	REVIEW_LIST, // 전체리뷰보기
 	REVIEW_UPDATE, // 리뷰업데이트
-	REVIEW_DETAIL // 리뷰 상세보기
+	REVIEW_DETAIL, // 리뷰 상세보기
+	REVIEW_DELETE, // 강의삭제하기
+	LECTURER_LECTURE_LIST, // 강사에 자기 강의리스트
+	BOOK_DELETE,//책 삭제하기
+	LECTURER_LECTURE_DETAIL,//강사의 강의목록 자세히 검색하기
+	LECTURE_UPDATE, //강의 수정하기
+	LECTURER_REVIEW,//강사님 강의 리뷰보기
+	REPLY_REVIEW,//리뷰에대한 답글남기기
+	REPLY_LIST, //답변 리스트
+	REPLY_UPDATE
+	
+	
 }

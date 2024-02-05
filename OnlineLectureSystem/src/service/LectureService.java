@@ -65,6 +65,15 @@ public class LectureService {
 	public int getMaxPage() {
 		return dao.getMaxPage();
 	}
+	public List<Map<String,Object>> lecturer_lecture_List(List<Object> param) {//추가
+		return dao.lecturer_lecture_List(param);
+	}
+	public Map<String,Object> lecturer_lecture_detail(List<Object> param) {//추가
+		return dao.lecturer_lecture_detail(param);
+	}
+	public void lectureUpdate(List<Object> param) {//추가
+		 dao.lectureUpdate(param);
+	}
 	
 	
 
