@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-
+import print.LecturePrint;
 import service.BookService;
 import service.LectureService;
 import service.ReplyService;
@@ -22,7 +22,7 @@ import vo.ReplyVo;
 import vo.ReviewVo;
 import vo.UserVo;
 
-public class MainController  {
+public class MainController extends LecturePrint  {
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	UserService userService = UserService.getInstance();
 	LectureService lectureService = LectureService.getInstance();
@@ -449,6 +449,10 @@ public class MainController  {
 			lectureService.lecturer_lecture_List(param);
 
 			List<Map<String, Object>> lecturer_lectureList = lectureService.lecturer_lecture_List(param);
+			if(lecturer_lectureList==null ||lecturer_lectureList.isEmpty()) {
+				System.out.println("등록된 강의가 없습니다 . 홈으로 돌아갑니다.");
+				return View.LECTURER_HOME;
+			}
 			System.out.println("-----------------------");
 			for (Map<String, Object> map : lecturer_lectureList) {
 				BigDecimal lecture_no = (BigDecimal) map.get("LECTURE_NO");
@@ -562,6 +566,10 @@ public class MainController  {
 	private View reviewList() {
 		System.out.println("작성한 리뷰 리스트입니다.");
 		List<ReviewVo> reviewlist = reviewService.reviewList(((UserVo) sessionStorage.get("user")).getUser_no());
+		if(reviewlist==null ||reviewlist.isEmpty()) {
+			System.out.println("작성한 리뷰가 없습니다.");
+			return View.USER_MYLECTURE;
+		}
 		for (ReviewVo reviewList : reviewlist) {
 			System.out.println(reviewList);
 		}
@@ -683,9 +691,9 @@ public class MainController  {
 		List<Object> param = new ArrayList();
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		List<Map<String, Object>> pastlectureApplyList = lectureService.pastlectureApplyList(param);
-		if(pastlectureApplyList.size()==0) {
+		if(pastlectureApplyList==null ||pastlectureApplyList.isEmpty() ) {
 			System.out.println("과거수강신청 내역이 비었습니다. 이전페이지로 돌아갑니다.");
-			return View.MEM_HOME;
+			return View.USER_MYLECTURE;
 		}
 		System.out.println("-----------------------");
 		for (Map<String, Object> map : pastlectureApplyList) {
@@ -721,7 +729,8 @@ public class MainController  {
 
 		
 		List<Map<String, Object>> lectureApplyList = lectureService.lectureApplyList(param);
-		if(lectureApplyList.size()==0) {
+		
+		if(lectureApplyList==null || lectureApplyList.isEmpty()) {
 			System.out.println("수강신청 내역이 없습니다. 수강신청을 진행하시겠습니까? \n1. 수강신청 리스트가기\n2. 내 강의\n3. 홈");
 			 int sel = ScanUtil.menu();
 			 switch (sel) {
@@ -759,7 +768,7 @@ public class MainController  {
 	}
 
 	private View userMylecture() {// 일반회원(내 강의)
-		System.out.println("1. 수강신청내역 확인하기\n2. 과거 수강신청내역 확인하기\n3. 작성한 리뷰 보기");
+		System.out.println("1. 수강신청내역 확인하기\n2. 과거 수강신청내역 확인하기\n3. 작성한 리뷰 보기\n4. 홈");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -768,6 +777,8 @@ public class MainController  {
 			return View.PAST_LECTURE_APPLY_LIST;
 		case 3:
 			return View.REVIEW_LIST;
+		case 4:
+			return View.MEM_HOME;
 		default:
 			return View.USER_MYLECTURE;
 		}
@@ -1594,11 +1605,17 @@ public class MainController  {
 	}
 
 	private View memHome() {
-		System.out.println("1. 전체 강의 조회하기");
-		System.out.println("2. 내 강의실");
-		System.out.println("3. 로그아웃");
-		System.out.println("4. 회원 탈퇴");
-		int sel = ScanUtil.menu();
+		for (int i = 0; i < 2; i++) {
+			var(104);
+			System.out.println();
+		}
+		System.out.println();
+		space(40);System.out.println("[1. 전체 강의 조회하기]");
+		space(40);System.out.println("[2. 내 강의실]");
+		space(40);System.out.println("[3. 로그아웃]");
+		space(40);System.out.println("[4. 회원 탈퇴]");
+		space(40);
+		int sel = ScanUtil.nextInt("[메뉴를 선택해주세요.]");
 		switch (sel) {
 		case 1:
 			return View.ALL_LECTURE_LIST;
@@ -1668,29 +1685,51 @@ public class MainController  {
 	}
 
 	private View login() {
-		System.out.println("로그인을 시작합니다");
-		String id = ScanUtil.nextLine("id : ");
-		String pass = ScanUtil.nextLine("pass : ");
+		space(40);System.out.println("[로그인을 시작합니다]");
+		space(40);String id = ScanUtil.nextLine("[id : ");
+		space(40);String pass = ScanUtil.nextLine("[pass : ");
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
 		param.add(pass);
 
 		if (userService.login(param, (int) sessionStorage.get("login"))) {
-			System.out.println(((UserVo) sessionStorage.get("user")).getUser_id() + "님 환영합니다.");
+			space(40);System.out.println("["+((UserVo) sessionStorage.get("user")).getUser_id() + "님 환영합니다. ]");
 			return (View) sessionStorage.get("page");
 		} else {
-			System.out.println("로그인 실패");
+			space(45);
+			System.out.println("[로그인 실패]");
 		}
 		return View.HOME;
 	}
 
 	private View home() {
-		System.out.println("1. 일반회원 로그인");
-		System.out.println("2. 강사 로그인");
-		System.out.println("3. 관리자 로그인");
-		System.out.println("4. 회원가입");
-		System.out.println("5. home");
-		int sel = ScanUtil.menu();
+		
+		System.out.println(" _______ __    _ ___     ___ __    _ _______   ___     _______ _______ _______ __   __ ______   _______   \r\n" + 
+				"|       |  |  | |   |   |   |  |  | |       | |   |   |       |       |       |  | |  |    _ | |       |  \r\n" + 
+				"|   _   |   |_| |   |   |   |   |_| |    ___| |   |   |    ___|       |_     _|  | |  |   | || |    ___|  \r\n" + 
+				"|  | |  |       |   |   |   |       |   |___  |   |   |   |___|       | |   | |  |_|  |   |_||_|   |___   \r\n" + 
+				"|  |_|  |  _    |   |___|   |  _    |    ___| |   |___|    ___|      _| |   | |       |    __  |    ___|  \r\n" + 
+				"|       | | |   |       |   | | |   |   |___  |       |   |___|     |_  |   | |       |   |  | |   |___   \r\n" + 
+				"|_______|_|  |__|_______|___|_|  |__|_______| |_______|_______|_______| |___| |_______|___|  |_|_______| ");
+		for (int i = 0; i < 6; i++) {
+			var(104);
+			System.out.println();
+		}
+		
+		space(30); System.out.print("[1. 일반회원 로그인]");
+		space(12);System.out.println("[2. 강사 로그인]");
+		space(23);System.out.print("[3. 관리자 로그인]");
+		space(9);System.out.print("[4. 회원가입]");
+		space(9);System.out.println("[5. home]");
+		for (int i = 0; i < 1; i++) {
+			var(104);
+			System.out.println();
+		}
+		var(104);
+		System.out.println();
+		space(40);
+		int sel = ScanUtil.nextInt("[메뉴를 선택해주세요.]");
+	
 		switch (sel) {
 		case 1:
 		case 2:
@@ -1700,9 +1739,17 @@ public class MainController  {
 		case 4:
 			// 재선택
 			while (true) {
-				System.out.println("1. 일반회원가입\n2. 강사회원가입\n3. home");
-				sel = ScanUtil.menu();
+				space(25);
+				System.out.print("[1. 일반회원가입]   [2. 강사회원가입]   [3. home]");
+				System.out.println();
+				var(104);
+				System.out.println();
+				space(90);
+				sel = ScanUtil.nextInt("메뉴를 선택해주세요");
+				var(104);
+				System.out.println();
 				if (sel > 3) {
+					space(90);
 					System.out.println("다시 선택 해주세요.");
 					continue;
 				}

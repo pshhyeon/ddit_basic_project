@@ -62,10 +62,10 @@ public class UserService {
 
 		MainController.sessionStorage.put("user", user);
 		if (sel == 1) {
-			MainController.sessionStorage.put("user", View.MEM_HOME);
+			MainController.sessionStorage.put("page", View.MEM_HOME);
 		}
 		if (sel == 2) {
-			MainController.sessionStorage.put("user", View.LECTURER_HOME);
+			MainController.sessionStorage.put("page", View.LECTURER_HOME);
 		}
 		return true;
 	}

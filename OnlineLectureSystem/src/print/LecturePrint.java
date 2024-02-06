@@ -6,6 +6,33 @@ import java.util.Map;
 
 public class LecturePrint {
 	
+	// 선 긋기
+		public void var(int num) {
+			String s = "";
+			for (int i = 0; i < num; i++) {
+				s += "-";
+			}
+			System.out.print(s);
+		}
+		
+		// 띄우기
+		public void space(int num) {
+			String s = "";
+			for (int i = 0; i < num; i++) {
+				s += " ";
+			}
+			System.out.print(s);
+		}
+		//#
+		public void shap(int num) {
+			String s = "";
+			for (int i = 0; i < num; i++) {
+				s += "#";
+			}
+			System.out.print(s);
+		}
+
+	
 	public void lectureList(List<Map<String, Object>> alllectureList){
 		for (Map<String, Object> map : alllectureList) {
 			BigDecimal lectureNo = (BigDecimal) map.get("LECTURE_NO");
