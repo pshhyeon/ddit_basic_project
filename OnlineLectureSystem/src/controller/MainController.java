@@ -159,7 +159,7 @@ public class MainController {
 		}
 	}
 
-	private View bookupdate() {//0206추가
+	private View bookupdate() {//0206추가 및 수정
 //		BOOK_CONTENT, BOOK_NAME, BOOKCATEGORY_NO
 		System.out.println("책 수정을 진행합니다.");
 		sessionStorage.get("book");
@@ -178,13 +178,13 @@ public class MainController {
 		case 1:
 			return View.BOOK_LIST;
 		case 2:
-			return View.LECTURER_HOME;
+			return View.LECTURER_MYLECTURE;
 		default:
 			return View.LECTURER_HOME;
 		}
 	}
 
-	private View bookdetail() {//0206
+	private View bookdetail() {//0206 수정
 		int booksell = ScanUtil.nextInt("검색할 책 번호를 입력해주세요");
 		MainController.sessionStorage.put("book", booksell);
 		List<Object> param = new ArrayList<Object>();
@@ -205,12 +205,11 @@ public class MainController {
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.BOOK_UPDATE
-					;
+			return View.BOOK_UPDATE;
 		case 2:
 			return View.BOOK_DELETE;
 		default:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		}
 	}
 
@@ -228,20 +227,20 @@ public class MainController {
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		replyService.replyUpdate(param);
 		System.out.println("수정이 완료되었습니다.");
-		int sel = ScanUtil.nextInt("1. 내 강의전체 리스트보기\n2. 내 강의 \n3 홈");
+		int sel = ScanUtil.nextInt("1. 내 강의전체 리스트보기\n2.이전페이지 돌아가기  \n3 홈");
 		switch (sel) {
 		case 1:
 			return View.LECTURER_LECTURE_LIST;
 		case 2:
-			return View.LECTURER_MYLECTURE;
+			return View.REPLY_REVIEW;
 		case 3:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		default:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		}
 	}
 
-	private View replyList() {
+	private View replyList() {//0206수정
 		((UserVo) sessionStorage.get("user")).getUser_no();
 		List<Object> param = new ArrayList<Object>();
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
@@ -254,10 +253,18 @@ public class MainController {
 			BigDecimal reviewnum = (BigDecimal) map.get("REVIEW_NO");
 			System.out.println("리뷰번호: " + reviewnum + "\t" + "답변내용: " + replyContent + "\t" + "답변날짜: " + replyDate);
 		}
-		return View.HOME;
+		int sel = ScanUtil.nextInt("1. 답변수정하기\n2.답변할 리뷰 다시선택하기");
+		switch (sel) {
+		case 1:
+			return View.REPLY_UPDATE;
+		case 2:
+			return View.REPLY_REVIEW;
+		default:
+			return View.LECTURER_HOME;
+		}
 	}
 
-	private View replyReview() {
+	private View replyReview() {//0206수정
 		int reviewNum = ScanUtil.nextInt("답변할 리뷰에 리뷰번호를 입력하세요");
 		sessionStorage.put("reviewNum", reviewNum);
 		String replycontent = ScanUtil.nextLine("리뷰에 답변할 내용을 입력해주세요");
@@ -267,18 +274,20 @@ public class MainController {
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		replyService.replyInsert(param);
 		System.out.println("성공적으로 답변하셨습니다.");
-		System.out.println("1. 답변리스트보기 \n2. 답변 수정하기");
+		System.out.println("1. 답변리스트보기 \n2. 이전페이지 돌아가기");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
 			return View.REPLY_LIST;
+		case 2:
+			return View.LECTURER_REVIEW;
+
 		default:
-			break;
+			return View.LECTURER_HOME;
 		}
-		return null;
 	}
 
-	private View lectureReview() {// 강사님 강의 review리스트
+	private View lectureReview() {// 강사님 강의 review리스트 0206 수정
 
 		sessionStorage.get("lectureNum");
 		List<Object> param = new ArrayList<Object>();
@@ -293,18 +302,18 @@ public class MainController {
 			System.out.println("리뷰번호: " + reviewNo.intValue() + "\t" + "리뷰내용: " + contente + "\t" + "별점: " + rated
 					+ "\t" + "리뷰날짜: " + reviewDate);
 		}
-		int sel = ScanUtil.nextInt("1. 리뷰에대한 답글달기\n2. 내 강의 ");
+		int sel = ScanUtil.nextInt("1. 리뷰에대한 답글달기\n2. 이전페이지 돌아가기");
 		switch (sel) {
 		case 1:
 			return View.REPLY_REVIEW;
 		case 2:
-			return View.LECTURER_MYLECTURE;
+			return View.LECTURER_LECTURE_DETAIL;
 		default:
-			return View.LECTURER_MYLECTURE;
+			return View.LECTURER_HOME;
 		}
 	}
 
-	private View lectureUpdate() {// 강의 수정하기 추가
+	private View lectureUpdate() {// 강의 수정하기 추가 0206수정
 		sessionStorage.get("lectureNum");
 		String lecturename = ScanUtil.nextLine("강의 제목을 변경해주세요");
 		String lecturecontent = ScanUtil.nextLine("강의 내용을 입력해주세요");
@@ -333,8 +342,8 @@ public class MainController {
 		}
 	}
 
-	private View lecturer_lecture_detail() {// 강의 자세히 검색하기 추가
-		int lectureNum = ScanUtil.nextInt("자세히 검새할 강의를 입력해주세요.");
+	private View lecturer_lecture_detail() {// 강의 자세히 검색하기 추가 0206수정
+		int lectureNum = ScanUtil.nextInt("자세히 검색할 강의를 입력해주세요.");
 		sessionStorage.put("lectureNum", lectureNum);
 
 		List<Object> param = new ArrayList<Object>();
@@ -354,20 +363,24 @@ public class MainController {
 				"강의번호: " + lecture_no.intValue() + "\t" + "강의명: " + lecture_Name + "\t" + "강의내용: " + lecture_content
 						+ "\t" + "카테고리 이름: " + category_name + "\t" + "난이도: " + level_name + "\t" + "책이름" + book_name);
 
-		System.out.println("1.강의 수정하기\n2. 리뷰보기");
+		System.out.println("1.강의 수정하기\n2.리뷰보기\n3.강의 다시 검색하기\n4.이전 페이지 돌아가기");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
 			return View.LECTURE_UPDATE;
 		case 2:
 			return View.LECTURER_REVIEW;
-		default:
+		case 3:
 			return View.LECTURER_LECTURE_DETAIL;
+		case 4:
+			return View.LECTURER_LECTURE_LIST;
+		default:
+			return View.LECTURER_HOME;
 		}
 
 	}
 
-	private View bookdelete() {// 책 삭제 추가
+	private View bookdelete() {// 책 삭제 추가//0206수정
 		int booksell = ScanUtil.nextInt("삭제할 책 번호를 입력해주세요");
 		MainController.sessionStorage.put("book", booksell);
 //		sessionStorage.get("bookNo");
@@ -375,7 +388,15 @@ public class MainController {
 		param.add((int) sessionStorage.get("book"));
 		bookservice.bookDelete(booksell);
 		System.out.println("정상적으로 삭제가 완료되었습니다.");
-		return View.LECTURER_HOME;
+		int sel = ScanUtil.nextInt("1. 책리스트 조회하기\n2.홈");
+		switch (sel) {
+		case 1:
+			return View.BOOK_LIST;
+		case 2:
+			return View.LECTURER_HOME;
+		default:
+			return View.LECTURER_HOME;
+		}
 	}
 
 	private View bookList() {// 책 목록BOOK_LIST추가 0206 수정
@@ -405,7 +426,7 @@ public class MainController {
 
 	}
 
-	private View lecturer_lecture_list() { // 강사님 강의조회하기 추가
+	private View lecturer_lecture_list() { // 강사님 강의조회하기 추가 0206
 
 		System.out.println("내 전체 강의리스트를 출력합니다. ");
 		((UserVo) sessionStorage.get("user")).getUser_no();
@@ -433,40 +454,42 @@ public class MainController {
 		case 1:
 			return View.LECTURER_LECTURE_DETAIL;
 		case 2:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		default:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		}
 
 	}
 
-	private View lecturerMylecture() {// 강사님 내 강의실
-		System.out.println("1. 내 강의검색 \n2. 강의 등록");
+	private View lecturerMylecture() {// 강사님 내 강의실 0206수정
+		System.out.println("1. 내 강의검색 \n2. 강의 등록\n3. 홈");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
 			return View.LECTURER_LECTURE_LIST;// 수정
 		case 2:
 			return View.LECTURE_INSERT;
+		case 3:
+			return View.LECTURER_HOME;
 		default:
-			return View.HOME;
+			return View.LECTURER_HOME;
 		}
 	}
 
-	private View reviewDelete() {// 리뷰삭제하기
+	private View reviewDelete() {// 리뷰삭제하기0206수정
 		System.out.println("리뷰삭제를 진행합니다.");
 		sessionStorage.get("reviewNo");
 		List<Object> param = new ArrayList();
 		param.add(sessionStorage.get("reviewNo"));
 		reviewService.reviewDelete(param);
-		int sel = ScanUtil.nextInt("이동할 페이지를 선택해 주세요. \n1. 내 강의실 \n2. 홈");
+		int sel = ScanUtil.nextInt("이동할 페이지를 선택해 주세요. \n1. 내  강의실 \n2. 홈");
 		switch (sel) {
 		case 1:
 			return View.USER_MYLECTURE;
 		case 2:
-			return View.HOME;
+			return View.MEM_HOME;
 		default:
-			return View.HOME;
+			return View.MEM_HOME;
 		}
 	}
 
@@ -479,7 +502,7 @@ public class MainController {
 		int reviewnum = (int) sessionStorage.get("reviewNo");
 		ReviewVo review = reviewService.reviewDetail(reviewnum);
 		System.out.println(review);
-		int sel = ScanUtil.nextInt("1. 리뷰 수정 \n2. 리뷰 삭제\n2. 작성한 리뷰 리트스");
+		int sel = ScanUtil.nextInt("1. 리뷰 수정 \n2. 리뷰 삭제\n3. 작성한 리뷰 리스트 조회하기");
 		switch (sel) {
 		case 1:
 			// 리뷰 디테일로 이동하게 하기
@@ -487,12 +510,14 @@ public class MainController {
 			return View.REVIEW_UPDATE;
 		case 2:
 			return View.REVIEW_DELETE;
-		default:
+		case 3:
 			return View.REVIEW_LIST;
+		default:
+			return View.MEM_HOME;
 		}
 	}
 
-	private View reviewUpdate() {
+	private View reviewUpdate() {//0206수정
 		System.out.println("리뷰수정을 진행합니다");
 		((UserVo) sessionStorage.get("user")).getUser_no();
 		sessionStorage.get("lectureNo");
@@ -513,7 +538,17 @@ public class MainController {
 		System.out.println("리뷰수정이 완료되었습니다.");
 		sessionStorage.put("reviewNo", reviewNo);
 		// 리뷰 디테일로 이동하게 하기
-		return View.REVIEW_DETAIL;
+		int sel = ScanUtil.nextInt("1.리뷰리스트 조회하기 \n2.홈\n3. 이전페이지");
+		switch (sel) {
+		case 1:
+			return View.REVIEW_LIST;
+		case 2:
+			return View.MEM_HOME;
+		case 3:
+			return View.REVIEW_DETAIL;
+		default:
+			return View.REVIEW_DETAIL;
+		}
 	}
 
 	private View reviewList() {
@@ -530,7 +565,7 @@ public class MainController {
 		case 2:
 			return View.MEM_HOME;
 		default:
-			return View.REVIEW_LIST;
+			return View.MEM_HOME;
 		}
 
 	}
@@ -555,13 +590,13 @@ public class MainController {
 		case 1:
 			return View.BOOK_LIST;
 		case 2:
-			return View.LECTURER_HOME;
+			return View.LECTURER_MYLECTURE;
 		default:
-			return View.LECTURER_HOME;
+			return View.LECTURER_MYLECTURE;
 		}
 	}
 
-	private View lectureInsert() {
+	private View lectureInsert() {//강의추가하기 0206 수정본
 		((UserVo) sessionStorage.get("user")).getUser_no();
 
 		System.out.println("");
@@ -582,7 +617,15 @@ public class MainController {
 		System.out.println("성공적으로 강의등록을 완료했습니다.");
 
 		// 나중에 필요하면 이동위치 바꾸기
-		return View.LECTURER_HOME;
+		int sel = ScanUtil.nextInt("1. 내 강의 조회하기 \n2. 홈");
+		switch (sel) {
+		case 1:
+			return View.LECTURER_LECTURE_LIST;
+		case 2:
+			return View.LECTURER_HOME;
+		default:
+			return View.LECTURER_HOME;
+		}
 	}
 
 	private View lectureCancel() {
@@ -621,19 +664,21 @@ public class MainController {
 		reviewService.makingReview(param);
 		System.out.println("성공적으로 리뷰를 작성하셨습니다.");
 
-		int sel = ScanUtil.nextInt("1. 리뷰목록보기 \n2. 리뷰수정하기");
+		int sel = ScanUtil.nextInt("1. 리뷰목록보기 \n2. 리뷰수정하기\n3. 리부삭제하기");
 		switch (sel) {
 		case 1:
 			return View.REVIEW_LIST;
 		case 2:
 			return View.REVIEW_UPDATE;
+		case 3:
+			return View.REVIEW_DELETE;
 		default:
 			System.out.println("잘못입력하셨습니다. 홈으로 돌아갑니다");
 			return View.MEM_HOME;
 		}
 	}
 
-	private View pastlectureApplyList() {// 과거수강신청내역
+	private View pastlectureApplyList() {// 과거수강신청내역 0206 수정
 		((UserVo) sessionStorage.get("user")).getUser_no();
 		System.out.println("내 과거수강신청 내역을 확인합니다");
 		List<Object> param = new ArrayList();
@@ -659,16 +704,28 @@ public class MainController {
 		case 2:
 			return View.MEM_HOME;
 		default:
-			return View.PAST_LECTURE_APPLY_LIST;
+			return View.MEM_HOME;
 		}
 	}
 
-	private View lectureApplyList() { // 수강신청내역
+	private View lectureApplyList() { // 수강신청내역 0206 수정
 		((UserVo) sessionStorage.get("user")).getUser_no();
 		System.out.println("내 수강신청 내역을 확인합니다");
 		List<Object> param = new ArrayList();
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
-
+		if( sessionStorage.get("lectureNo")== null ) {
+			System.out.println("수강신청 내역이 없습니다. 수강신청을 진행하시겠습니까? \n1. 수강신청 리스트가기\n2. 내 강의\n3. 홈");
+			 int sel = ScanUtil.menu();
+			 switch (sel) {
+			case 1:
+				return View.ALL_LECTURE_LIST;
+			case 2:
+				return View.USER_MYLECTURE;
+			default:
+				return View.MEM_HOME;
+			 }
+		}
+		
 		List<Map<String, Object>> lectureApplyList = lectureService.lectureApplyList(param);
 		System.out.println("-----------------------");
 		for (Map<String, Object> map : lectureApplyList) {
@@ -690,12 +747,13 @@ public class MainController {
 		case 2:
 			return View.MEM_HOME;
 		default:
-			return View.LECTURE_APPLY_LIST;
+			return View.MEM_HOME;
 		}
 
 	}
 
 	private View userMylecture() {// 일반회원(내 강의)
+		System.out.println("내 강의실입니다.");
 		System.out.println("1. 수강신청내역 확인하기\n2. 과거 수강신청내역 확인하기\n3. 작성한 리뷰 보기");
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -706,12 +764,12 @@ public class MainController {
 		case 3:
 			return View.REVIEW_LIST;
 		default:
-			return View.USER_MYLECTURE;
+			return View.MEM_HOME;
 		}
 
 	}
 
-	private View lectureApply() {// 수강신청하기
+	private View lectureApply() {// 수강신청하기 0206 수정
 		((UserVo) sessionStorage.get("user")).getUser_no();// (UserVo)타입을 넣어주는것을 캐스팅이라고 한다
 		sessionStorage.get("lectureNo");
 		System.out.println("");
@@ -720,8 +778,15 @@ public class MainController {
 		param.add((int) sessionStorage.get("lectureNo"));
 		lectureService.lectureApply(param);
 		System.out.println("수강신청이 완료되었습니다");
-
-		return View.USER_MYLECTURE;
+		int sel = ScanUtil.nextInt("1. 수강신청 내역 확인하기\n2. 내 강의");
+		switch (sel) {
+		case 1:
+			return View.LECTURE_APPLY_LIST;
+		case 2:
+			return View.USER_MYLECTURE;
+		default:
+			return View.MEM_HOME;
+		}
 	}
 
 	private View lectureDetail() {// 강의 자세히보기
@@ -827,7 +892,7 @@ public class MainController {
 		return View.LECTURE_DETAIL;
 	}
 
-	private View lectureSearch() {
+	private View lectureSearch() {//0206수정본
 		System.out.println("1. 이름 검색");
 		System.out.println("2. 강의 카테고리 검색");
 		System.out.println("3. 전체 검색");
@@ -886,7 +951,7 @@ public class MainController {
 			case 3:
 				return View.MEM_HOME;
 			default:
-				return View.LECTURE_SEARCH;
+				return View.MEM_HOME;
 			}
 		}
 		// 강사
@@ -907,7 +972,7 @@ public class MainController {
 			case 4:
 				return View.LECTURER_HOME;
 			default:
-				return View.ALL_LECTURE_LIST;
+				return View.LECTURER_HOME;
 			}
 		}
 
@@ -1451,21 +1516,24 @@ public class MainController {
 		}
 	}
 
-	private View lecturerHome() {
+	private View lecturerHome() {//0206수정하기 1011
 		System.out.println("1. 내강의 조회하기");
 		System.out.println("2. 내 책 조회");
-		System.out.println("3. 로그아웃");
-		System.out.println("4. 회원 탈퇴");
+		System.out.println("3. 내 강의실 ");
+		System.out.println("4. 로그아웃");
+		System.out.println("5. 회원 탈퇴");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.ALL_LECTURE_LIST;
+			return View.LECTURER_LECTURE_LIST;
 		case 2:
 			return View.BOOK_LIST;
 		case 3:
+			return View.LECTURER_MYLECTURE;
+		case 4:
 			sessionStorage.clear();
 			return View.HOME;
-		case 4:
+		case 5:
 			sessionStorage.put("page", View.LECTURER_HOME);
 			return userDelete();
 		default:
