@@ -26,7 +26,7 @@
 
 ### 2. 테이블 명세서에 따른 ERD설계
 
-### ![ERD](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/74e86e24-2222-493c-ae71-e3b0504989b9)
+### ![ddit_4_온라인 강의 시스템 ERD](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/66085d9a-4f38-4f38-a2ef-4fd7ef532adb)
 
 ### 3. DB생성
 ![111111111](https://github.com/pshhyeon/ddit_basic_project/assets/130214802/4da7c5a6-6238-4efd-b1fa-ef26e677d124)
