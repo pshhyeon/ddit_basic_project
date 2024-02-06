@@ -48,10 +48,6 @@ public class ReviewService {
 		return dao.lectureReview(param);
 	}
 	
-	
-	
-	
-	
 	public List<ReviewVo> adminReviewList(List<Object> param) {
 		return dao.adminReviewList(param);
 	}

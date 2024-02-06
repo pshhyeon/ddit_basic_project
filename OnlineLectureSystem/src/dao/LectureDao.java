@@ -238,18 +238,19 @@ public class LectureDao {
 		}
    
 		
-		public List<Map<String, Object>> lecturer_lecture_List(List<Object> param) { // 0205 추가
+		public List<Map<String, Object>> lecturer_lecture_List(List<Object> param) { //0206수정본
 			String sql = " SELECT DISTINCT L.LECTURE_NO AS LECTURE_NO,\r\n" + 
-					"       L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
-					"       L.LECTURE_CONTENT AS LECTURE_CONTENT,\r\n" + 
-					"       C.CATEGORY_NAME AS CATEGORY_NAME,\r\n" + 
-					"       LE.LEVEL_NAME AS LEVEL_NAME,\r\n" + 
-					"       B.BOOK_NAME AS BOOK_NAME\r\n" + 
+					"L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
+					"L.LECTURE_CONTENT AS LECTURE_CONTENT, \r\n" + 
+					"C.CATEGORY_NAME AS CATEGORY_NAME,\r\n" + 
+					"LE.LEVEL_NAME AS LEVEL_NAME,\r\n" + 
+					" B.BOOK_NAME AS BOOK_NAME\r\n" + 
 					"FROM LECTURE L , USER_ U , \"CATEGORY\" C , \"LEVEL\" LE , BOOK B\r\n" + 
 					"WHERE L.BOOK_NO = B.BOOK_NO\r\n" + 
 					"AND L.LEVEL_NO = LE.LEVEL_NO\r\n" + 
 					"AND L.CATEGORY_NO = C.CATEGORY_NO\r\n" + 
-					"AND L.USER_NO = ? " + " AND L.DELYN IS NULL ";
+					"AND L.USER_NO = ? AND L.DELYN IS NULL\r\n" + 
+					"ORDER BY LECTURE_NO";
 			return jdbc.selectList(sql,param);
 		}
 		

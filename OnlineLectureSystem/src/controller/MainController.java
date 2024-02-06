@@ -160,7 +160,6 @@ public class MainController {
 	}
 
 	private View bookupdate() {//0206추가 및 수정
-//		BOOK_CONTENT, BOOK_NAME, BOOKCATEGORY_NO
 		System.out.println("책 수정을 진행합니다.");
 		sessionStorage.get("book");
 		String bookContent = ScanUtil.nextLine("수정할 내용을 입력해주세요");
@@ -253,12 +252,14 @@ public class MainController {
 			BigDecimal reviewnum = (BigDecimal) map.get("REVIEW_NO");
 			System.out.println("리뷰번호: " + reviewnum + "\t" + "답변내용: " + replyContent + "\t" + "답변날짜: " + replyDate);
 		}
-		int sel = ScanUtil.nextInt("1. 답변수정하기\n2.답변할 리뷰 다시선택하기");
+		int sel = ScanUtil.nextInt("1.답변수정하기\n2.답변할 리뷰 다시선택하기\n3.홈");
 		switch (sel) {
 		case 1:
 			return View.REPLY_UPDATE;
 		case 2:
 			return View.REPLY_REVIEW;
+		case 3:
+			return View.LECTURER_HOME;
 		default:
 			return View.LECTURER_HOME;
 		}
@@ -292,9 +293,9 @@ public class MainController {
 		sessionStorage.get("lectureNum");
 		List<Object> param = new ArrayList<Object>();
 		param.add(sessionStorage.get("lectureNum"));
-		List<Map<String, Object>> lectureupdate = reviewService.lectureReview(param);
+		List<Map<String, Object>> lecturereview = reviewService.lectureReview(param);
 		System.out.println("-----------------------");
-		for (Map<String, Object> map : lectureupdate) {
+		for (Map<String, Object> map : lecturereview) {
 			BigDecimal reviewNo = (BigDecimal) map.get("REVIEW_NO");
 			String contente = (String) map.get("CONTENT");
 			String rated = (String) map.get("RATED");
@@ -302,12 +303,12 @@ public class MainController {
 			System.out.println("리뷰번호: " + reviewNo.intValue() + "\t" + "리뷰내용: " + contente + "\t" + "별점: " + rated
 					+ "\t" + "리뷰날짜: " + reviewDate);
 		}
-		int sel = ScanUtil.nextInt("1. 리뷰에대한 답글달기\n2. 이전페이지 돌아가기");
+		int sel = ScanUtil.nextInt("1. 리뷰에대한 답글달기\n2. 홈");
 		switch (sel) {
 		case 1:
 			return View.REPLY_REVIEW;
 		case 2:
-			return View.LECTURER_LECTURE_DETAIL;
+			return View.LECTURER_HOME;
 		default:
 			return View.LECTURER_HOME;
 		}
@@ -317,9 +318,10 @@ public class MainController {
 		sessionStorage.get("lectureNum");
 		String lecturename = ScanUtil.nextLine("강의 제목을 변경해주세요");
 		String lecturecontent = ScanUtil.nextLine("강의 내용을 입력해주세요");
-		int categoryno = ScanUtil.nextInt("카테고리번호를 입력해주세요");
-		int levelno = ScanUtil.nextInt("난이도를 입력해주세요");
-		int bookno = ScanUtil.nextInt("책 번호를 입력해주세요");
+		int categoryno = ScanUtil.nextInt("카테고리번호를 입력해주세요\n1.JAVA\n2.PYTHON\n3.C++\n4.C"
+				         + "\n5.SPRING\n6.LINUX\n7.SQL\n8.HTML\n9.VFX\n10.NFT");
+		int levelno = ScanUtil.nextInt("난이도를 입력해주세요.\n1.Beginner\n2.Basic\n3.Middle\n4.Expert");
+		int bookno = ScanUtil.nextInt("책 종류를 적어주세여\n1. 웹개발 \n2.게임개발 \n3.DataBase");
 		List<Object> param = new ArrayList<Object>();
 		param.add(lecturename);
 		param.add(lecturecontent);
