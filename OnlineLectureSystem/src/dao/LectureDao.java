@@ -8,6 +8,7 @@ import controller.MainController;
 import util.JDBCUtil;
 import vo.LectureCategoryVo;
 import vo.LectureVo;
+import vo.MyHomeVo;
 import vo.UserVo;
 
 public class LectureDao {
@@ -43,7 +44,7 @@ public class LectureDao {
 	      return jdbc.selectOne(sql,param);
 	   }
 	
-   public List<Map<String, Object>> lectureList() {
+   public List<Map<String, Object>> lectureList() { //00
 	   String sql = " SELECT L.LECTURE_NO AS LECTURE_NO,\r\n" + 
 				"       L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
 				"       L.LECTURE_CONTENT AS LECTURE_CONTENT,\r\n" + 
@@ -56,7 +57,7 @@ public class LectureDao {
 				" AND L.LEVEL_NO = LE.LEVEL_NO\r\n" + 
 				" AND L.BOOK_NO = B.BOOK_NO\r\n " + 
 				" AND LC.CATEGORY_NO = L.CATEGORY_NO "
-				+ " AND L.DELYN IS NULL ";
+				+ " AND L.DELYN IS NULL  ORDER BY LECTURE_NO";
 		
 		UserVo user = (UserVo) MainController.sessionStorage.get("user");
 
@@ -167,8 +168,16 @@ public class LectureDao {
    
    // 수강 신청
    public void lectureApply(List<Object> param) {
-		String sql = " INSERT INTO MYHOME(USER_NO, LECTURE_NO) VALUES(?, ?) ";
-		jdbc.update(sql, param);
+	   
+	   String sql = "SELECT LECTURE_NO FROM MYHOME WHERE USER_NO = ? AND LECTURE_NO = ? ";
+	   MyHomeVo myhome = jdbc.selectOne(sql, param,MyHomeVo.class);
+	   if (myhome == null) {
+		   sql = " INSERT INTO MYHOME(USER_NO, LECTURE_NO) VALUES(?, ?) ";
+		   jdbc.update(sql, param);		   
+	   }else {
+		   sql = "UPDATE MYHOME SET LECTURE_START = SYSDATE , LECTURE_FINISH = NULL, DELYN = NULL WHERE  USER_NO = ? AND LECTURE_NO = ?";
+		   jdbc.update(sql, param);		   
+	   }
 
 	}
 	
@@ -189,17 +198,17 @@ public class LectureDao {
 	}
 	
 	// 과거 수강신청 내역
-		public List<Map<String, Object>> pastlectureApplyList(List<Object> param) {
-			String sql = " SELECT U.USER_NAME AS USER_NAME,L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
-					" C.CATEGORY_NAME AS CATEGORY_NAME,LE.LEVEL_NAME AS LEVEL_NAME,\r\n" + 
-					" TO_CHAR(M.LECTURE_START) AS LECTURE_START,\r\n" + 
-					" TO_CHAR(M.LECTURE_FINISH) AS LECTURE_FINISH,\r\n" + 
-					" L.LECTURE_NO AS LECTURE_NO\r\n" + 
-					" FROM MYHOME M , USER_ U , LECTURE L , \"CATEGORY\" C , \"LEVEL\" LE\r\n" + 
-					" WHERE M.USER_NO = U.USER_NO AND M.LECTURE_NO = L.LECTURE_NO\r\n" + 
-					" AND C.CATEGORY_NO = L.CATEGORY_NO AND LE.LEVEL_NO = L.LEVEL_NO\r\n" + 
-					" AND LECTURE_FINISH IS NOT NULL \r\n" + 
-					" AND M.USER_NO = ? "+ " AND L.DELYN IS NULL ";
+		public List<Map<String, Object>> pastlectureApplyList(List<Object> param) {//00
+			String sql = "SELECT L.LECTURE_NAME AS LECTURE_NAME,\r\n" + 
+					"C.CATEGORY_NAME AS CATEGORY_NAME,LE.LEVEL_NAME AS LEVEL_NAME, \r\n" + 
+					"TO_CHAR(M.LECTURE_START) AS LECTURE_START,\r\n" + 
+					"TO_CHAR(M.LECTURE_FINISH) AS LECTURE_FINISH, \r\n" + 
+					"L.LECTURE_NO AS LECTURE_NO\r\n" + 
+					"FROM MYHOME M , USER_ U , LECTURE L , \"CATEGORY\" C , \"LEVEL\" LE\r\n" + 
+					"WHERE M.USER_NO = U.USER_NO AND M.LECTURE_NO = L.LECTURE_NO\r\n" + 
+					"AND C.CATEGORY_NO = L.CATEGORY_NO AND LE.LEVEL_NO = L.LEVEL_NO \r\n" + 
+					"AND LECTURE_FINISH IS NOT NULL \r\n" + 
+					"AND M.USER_NO = ? AND L.DELYN IS NULL ORDER BY LECTURE_NO ";
 			return jdbc.selectList(sql, param);
 		}
 		

@@ -73,13 +73,16 @@ public class UserDao {
 		jdbc.update(sql);
 	}
 	
-	public List<UserVo> memList(List<Object> param, int sel) {
+	public List<UserVo> memList(List<Object> param, int sel, int type) {
 		String sql = "SELECT *\r\n" + 
 				" FROM (SELECT ROWNUM AS RN, A.* \r\n " + 
-				"        FROM (SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD') AS USER_BIR, USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD') AS JOIN_DATE, DIVI_NO, DELYN \r\n "  + 
-				"                FROM USER_  \r\n " + 
-				"               WHERE DIVI_NO = "+ sel+ " AND DELYN IS NULL ) A)\r\n " + 
-				" WHERE RN BETWEEN ? AND ? ";
+				" FROM (SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD') AS USER_BIR, USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD') AS JOIN_DATE, DIVI_NO, DELYN \r\n "  + 
+				" FROM USER_  \r\n " + 
+				" WHERE DIVI_NO = " + sel; 
+		if(type==1) {sql+=" AND USER_ID LIKE '%'||?||'%' ";}
+		if(type==2) {sql+=" AND USER_NAME LIKE '%'||?||'%' ";}
+		if(type==3) {sql+=" AND USER_NO LIKE '%'||?||'%' ";}
+		sql += " ) A)  WHERE RN BETWEEN ? AND ?  ORDER BY USER_NO ";
 		return jdbc.selectList(sql, param, UserVo.class);
 	}
 	

@@ -41,5 +41,5 @@ public enum View {
 	ADMIN_REVIEW_LIST, // 관리자 리뷰 조회
 	ADMIN_REVIEW_DETAIL, // 관리자 리뷰 상세 조회
 	BOOK_DETAIL, //책 디테일  (0205 추가)
-	BOOK_UPDATE // 책수정하기
+	BOOK_UPDATE // 책수정하기 0206
 }

@@ -20,8 +20,8 @@ public class BookService {
 
 	BookDao dao = BookDao.getInstance();
 	
-	public void bookInsert(List<Object> param) {
-		dao.bookInsert(param);
+	public int bookInsert(List<Object> param) {
+		return dao.bookInsert(param);
 	}
 	
 	public List<Map<String,Object>> bookList() {

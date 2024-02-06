@@ -99,8 +99,14 @@ public class UserService {
 		return View.HOME;
 	}
 	
+	// OVERRIDING
 	public List<UserVo> memList(List<Object> param, int sel) {
-		return dao.memList(param, sel);
+		return memList(param, sel, 0);
+	}
+
+	// OVERRIDING
+	public List<UserVo> memList(List<Object> param, int sel, int type) {
+		return dao.memList(param, sel, type);
 	}
 	
 	public int getMaxMem(int sel) {

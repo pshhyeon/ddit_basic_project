@@ -75,13 +75,13 @@ public class ReviewDao {
 	   }
 	 
 
-	 public List<Map<String, Object>> lectureReview(List<Object> param) { // 0205 추가
+	 public List<Map<String, Object>> lectureReview(List<Object> param) { // 0205 추가 00
 			String sql =" SELECT REVIEW_NO AS REVIEW_NO,\r\n" + 
 					"       \"CONTENT\" AS \"CONTENT\",\r\n" + 
 					"       RATED AS RATED,\r\n" + 
 					"       TO_CHAR(REVIEW_DATE) AS REVIEW_DATE\r\n" + 
 					"FROM REVIEW\r\n" + 
-					"WHERE LECTURE_NO = ? AND DELYN IS NULL";
+					"WHERE LECTURE_NO = ? AND DELYN IS NULL ORDER BY REVIEW_NO";
 			return jdbc.selectList(sql,param);
 		}
 
@@ -89,7 +89,7 @@ public class ReviewDao {
 		 String sql = "SELECT REVIEW_NO, CONTENT, RATED, TO_CHAR(REVIEW_DATE, 'YYYYMMDD') AS REVIEW_DATE, USER_NO, LECTURE_NO, DELYN\r\n" + 
 					"FROM (SELECT ROWNUM AS RN, A.*\r\n" + 
 					"        FROM (SELECT * FROM REVIEW ORDER BY REVIEW_NO) A)\r\n" + 
-					"WHERE RN BETWEEN ? AND ?";
+					"WHERE RN BETWEEN ? AND ? ORDER BY REVIEW_NO";
 			return jdbc.selectList(sql, param, ReviewVo.class);
 	 }
 	 
