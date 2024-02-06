@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import dao.ReplyDao;
+import vo.ReplyVo;
 
 public class ReplyService {
 	private static ReplyService instance = null;
@@ -19,16 +20,21 @@ public class ReplyService {
 	}
 
 	ReplyDao dao = ReplyDao.getInstance();
-	
+
+	public ReplyVo adminGetReply(int re) {
+		return dao.adminGetReply(re);
+	}
+
 	public void replyInsert(List<Object> param) {
 		dao.replyInsert(param);
 	}
+
 	public List<Map<String, Object>> replyList(List<Object> param) {
 		return dao.replyList(param);
 	}
 	
-	public void replyUpdate(List<Object> param) { //4 번째
+	public void replyUpdate(List<Object> param) { // 0205 추가
 		dao.replyUpdate(param);
 	}
-	
+
 }

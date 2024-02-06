@@ -5,6 +5,7 @@ import java.util.Map;
 
 import dao.LectureDao;
 import vo.LectureCategoryVo;
+import vo.LectureVo;
 
 public class LectureService {
 	private static LectureService instance = null;
@@ -65,16 +66,27 @@ public class LectureService {
 	public int getMaxPage() {
 		return dao.getMaxPage();
 	}
-	public List<Map<String,Object>> lecturer_lecture_List(List<Object> param) {//추가
+	
+	public List<LectureVo> adminLectureList(List<Object> param) {		
+		return dao.adminLectureList(param);
+	}
+	
+	public Map<String, Object> adminLectureDetail(int sel) {
+		return dao.adminLectureDetail(sel);
+	}
+	
+	public void lectureDelyn(List<Object> param){
+		dao.lectureDelyn(param);
+	}
+	
+	public List<Map<String,Object>> lecturer_lecture_List(List<Object> param) {//0205추가
 		return dao.lecturer_lecture_List(param);
 	}
-	public Map<String,Object> lecturer_lecture_detail(List<Object> param) {//추가
+	public Map<String,Object> lecturer_lecture_detail(List<Object> param) {//0205추가
 		return dao.lecturer_lecture_detail(param);
 	}
-	public void lectureUpdate(List<Object> param) {//추가
+	public void lectureUpdate(List<Object> param) {//0205추가
 		 dao.lectureUpdate(param);
 	}
-	
-	
 
 }

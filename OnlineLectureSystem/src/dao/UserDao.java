@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,8 @@ public class UserDao {
 	public UserVo login(List<Object> param, int sel) {
 		String sql = " SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD'), USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD'), DIVI_NO FROM USER_  \r\n "
 				+ " WHERE USER_ID = ? \r\n " + "   AND USER_PASS = ? \r\n "
-				+ "   AND DIVI_NO = (SELECT DIVI_NO FROM USER_DIVI WHERE DIVI_NO = " + sel + " ) ";
+				+ "   AND DIVI_NO = (SELECT DIVI_NO FROM USER_DIVI WHERE DIVI_NO = " + sel + " ) "
+				+ " AND DELYN IS NULL ";
 
 		return jdbc.selectOne(sql, param, UserVo.class);
 	}
@@ -69,6 +71,36 @@ public class UserDao {
 		String sql = " UPDATE  USER_  SET DELYN = 'Y' WHERE USER_ID = '" + id + "'";
 
 		jdbc.update(sql);
+	}
+	
+	public List<UserVo> memList(List<Object> param, int sel) {
+		String sql = "SELECT *\r\n" + 
+				" FROM (SELECT ROWNUM AS RN, A.* \r\n " + 
+				"        FROM (SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR,'YYYYMMDD') AS USER_BIR, USER_NAME, TO_CHAR(JOIN_DATE,'YYYYMMDD') AS JOIN_DATE, DIVI_NO, DELYN \r\n "  + 
+				"                FROM USER_  \r\n " + 
+				"               WHERE DIVI_NO = "+ sel+ " AND DELYN IS NULL ) A)\r\n " + 
+				" WHERE RN BETWEEN ? AND ? ";
+		return jdbc.selectList(sql, param, UserVo.class);
+	}
+	
+	
+	
+	public int getMaxMem(int sel) {
+		String sql = "SELECT MAX(ROWNUM) AS RN FROM (SELECT * FROM USER_ WHERE DIVI_NO = "+sel+")";
+		Map<String, Object> map = jdbc.selectOne(sql);
+		return ((BigDecimal) map.get("RN")).intValue();
+	}
+	
+	public UserVo memDetail(int memNo) {
+		String sql= " SELECT USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, TO_CHAR(USER_BIR, 'YYYYMMDD') AS USER_BIR, USER_NAME, TO_CHAR(JOIN_DATE, 'YYYYMMDD') AS JOIN_DATE, DIVI_NO, DELYN FROM USER_ WHERE USER_NO  = " + memNo;
+		
+		return jdbc.selectOne(sql, UserVo.class);
+	}
+	
+	public void memDelyn(List<Object> param) {
+		String sql = " UPDATE USER_ SET DELYN = ? WHERE USER_ID = ? ";
+		
+		jdbc.update(sql, param);		
 	}
 
 }

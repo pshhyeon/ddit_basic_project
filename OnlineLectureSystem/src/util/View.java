@@ -34,7 +34,12 @@ public enum View {
 	LECTURER_REVIEW,//강사님 강의 리뷰보기
 	REPLY_REVIEW,//리뷰에대한 답글남기기
 	REPLY_LIST, //답변 리스트
-	REPLY_UPDATE
-	
-	
+	REPLY_UPDATE, // 답변 수정
+	MEM_DETAIL, // 회원 상세조회
+	ADMIN_LECTURE_LIST, // 관리자 강의 조회
+	ADMIN_LECTURE_DETAIL, // 관리자 강의 상세 조회
+	ADMIN_REVIEW_LIST, // 관리자 리뷰 조회
+	ADMIN_REVIEW_DETAIL, // 관리자 리뷰 상세 조회
+	BOOK_DETAIL, //책 디테일  (0205 추가)
+	BOOK_UPDATE // 책수정하기
 }

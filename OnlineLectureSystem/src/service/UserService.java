@@ -98,5 +98,21 @@ public class UserService {
 		MainController.sessionStorage.clear();
 		return View.HOME;
 	}
+	
+	public List<UserVo> memList(List<Object> param, int sel) {
+		return dao.memList(param, sel);
+	}
+	
+	public int getMaxMem(int sel) {
+		return dao.getMaxMem(sel);
+	}
+	
+	public UserVo memDetail(int memNo) {
+		return dao.memDetail(memNo);
+	}
+	
+	public void memDelyn(List<Object> param){
+		dao.memDelyn(param);
+	}
 
 }

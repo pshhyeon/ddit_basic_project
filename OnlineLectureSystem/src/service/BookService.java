@@ -30,4 +30,10 @@ public class BookService {
 	public void bookDelete(int booksell) {
 		 dao.bookDelete(booksell);
 	}
+	public Map<String,Object> bookdetail(List<Object> param) {//0206추가
+		return dao.bookdetail(param);
+	}
+	public void bookUpdate(List<Object> param) {//0205추가
+		 dao.bookUpdate(param);
+	}
 }

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import print.LecturePrint;
 import service.BookService;
 import service.LectureService;
 import service.ReplyService;
@@ -15,17 +14,20 @@ import service.UserService;
 import util.ScanUtil;
 import util.View;
 import vo.LectureCategoryVo;
+import vo.LectureVo;
 import vo.MyHomeVo;
+import vo.ReplyVo;
 import vo.ReviewVo;
 import vo.UserVo;
 
-public class MainController extends LecturePrint {
+public class MainController {
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	UserService userService = UserService.getInstance();
 	LectureService lectureService = LectureService.getInstance();
 	BookService bookservice = BookService.getInstance();
 	ReviewService reviewService = ReviewService.getInstance();
 	ReplyService replyService = ReplyService.getInstance();
+
 	public static void main(String[] args) {
 		new MainController().start();
 	}
@@ -100,7 +102,7 @@ public class MainController extends LecturePrint {
 			case REVIEW_DELETE:
 				view = reviewDelete();
 				break;
-			case LECTURER_LECTURE_LIST:// 강사 강의목록 
+			case LECTURER_LECTURE_LIST:// 강사 강의목록
 				view = lecturer_lecture_list();
 				break;
 			case BOOK_LIST: // BOOK-LIST 추가
@@ -124,8 +126,32 @@ public class MainController extends LecturePrint {
 			case REPLY_LIST:
 				view = replyList();
 				break;
-			case REPLY_UPDATE: // 2번째
+			case MEM_LIST:
+				view = memList();
+				break;
+			case MEM_DETAIL:
+				view = memDetail();
+				break;
+			case ADMIN_LECTURE_LIST:
+				view = adminLectureList();
+				break;
+			case ADMIN_LECTURE_DETAIL:
+				view = adminLectureDetail();
+				break;
+			case ADMIN_REVIEW_LIST:
+				view = adminReviewList();
+				break;
+			case ADMIN_REVIEW_DETAIL:
+				view = adminReviewDetail();
+				break;
+			case REPLY_UPDATE:
 				view = replyUpdate();
+				break;
+			case BOOK_DETAIL://0206추가
+				view = bookdetail();
+				break;
+			case BOOK_UPDATE://0206추가
+				view = bookupdate();
 				break;
 			default:
 				break;
@@ -133,13 +159,69 @@ public class MainController extends LecturePrint {
 		}
 	}
 
-	private View replyUpdate() {//(추가본) 1번째
+	private View bookupdate() {//0206추가
+//		BOOK_CONTENT, BOOK_NAME, BOOKCATEGORY_NO
+		System.out.println("책 수정을 진행합니다.");
+		sessionStorage.get("book");
+		String bookContent = ScanUtil.nextLine("수정할 내용을 입력해주세요");
+		String bookName = ScanUtil.nextLine("수정할 책 제목을 입력해주세요");
+		int bookCategory = ScanUtil.nextInt("책 종류를 적어주세여\\n1. 웹개발 \\n2.게임개발 \\n3.DataBase");
+		List<Object> param = new ArrayList<Object>();
+		param.add(bookContent);
+		param.add(bookName);
+		param.add(bookCategory);
+		param.add(sessionStorage.get("book"));
+		bookservice.bookUpdate(param);
+		System.out.println("책 수정이 완료되었습니다 \n1.책 리스트보기 \n2. 내 강의");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.BOOK_LIST;
+		case 2:
+			return View.LECTURER_HOME;
+		default:
+			return View.LECTURER_HOME;
+		}
+	}
+
+	private View bookdetail() {//0206
+		int booksell = ScanUtil.nextInt("검색할 책 번호를 입력해주세요");
+		MainController.sessionStorage.put("book", booksell);
+		List<Object> param = new ArrayList<Object>();
+		param.add(booksell);
+		System.out.println("책 상세조회입니다.");
+		
+		
+		System.out.println("------------------------");
+		Map<String, Object> map  = bookservice.bookdetail(param);
+			BigDecimal bookno = (BigDecimal) map.get("BOOK_NO");
+			String bookname = (String) map.get("BOOK_NAME");
+			String bookcontent = (String) map.get("BOOK_CONTENT");
+			String bookcategoryname = (String) map.get("BOOKCATEGORY_NAME");
+
+			System.out.println("책번호: " + bookno.intValue() + "\t" + "책제목: " + bookname + "\t" + "책내용: " + bookcontent
+					+ "\t" + "책 카테고리 이름: " + bookcategoryname);
+		System.out.println("1. 책 수정하기\n2. 책 삭제하기");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.BOOK_UPDATE
+					;
+		case 2:
+			return View.BOOK_DELETE;
+		default:
+			return View.HOME;
+		}
+	}
+
+	// 0205 추가
+	private View replyUpdate() {
 
 		System.out.println("답변 수정하기를 진행합니다");
 		sessionStorage.get("reviewNum");
 		((UserVo) sessionStorage.get("user")).getUser_no();
 		String replycontent = ScanUtil.nextLine("수정할 강의 답변내용을 적어주세요");
-		
+
 		List<Object> param = new ArrayList<Object>();
 		param.add(replycontent);
 		param.add(sessionStorage.get("reviewNum"));
@@ -159,10 +241,7 @@ public class MainController extends LecturePrint {
 		}
 	}
 
-	private View replyList() {  //(추가본)
-//		 REPLY_CONTENT,
-//	     REPLY_DATE,
-//	     REVIEW_NO
+	private View replyList() {
 		((UserVo) sessionStorage.get("user")).getUser_no();
 		List<Object> param = new ArrayList<Object>();
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
@@ -192,15 +271,14 @@ public class MainController extends LecturePrint {
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			 return View.REPLY_LIST;
-		case 2:
-			 return View.REPLY_UPDATE;
+			return View.REPLY_LIST;
 		default:
-			 return View.HOME;
+			break;
 		}
+		return null;
 	}
 
-	private View lectureReview() {//강사님 강의 review리스트
+	private View lectureReview() {// 강사님 강의 review리스트
 
 		sessionStorage.get("lectureNum");
 		List<Object> param = new ArrayList<Object>();
@@ -226,14 +304,14 @@ public class MainController extends LecturePrint {
 		}
 	}
 
-	private View lectureUpdate() {//강의 수정하기 추가
+	private View lectureUpdate() {// 강의 수정하기 추가
 		sessionStorage.get("lectureNum");
 		String lecturename = ScanUtil.nextLine("강의 제목을 변경해주세요");
 		String lecturecontent = ScanUtil.nextLine("강의 내용을 입력해주세요");
 		int categoryno = ScanUtil.nextInt("카테고리번호를 입력해주세요");
 		int levelno = ScanUtil.nextInt("난이도를 입력해주세요");
 		int bookno = ScanUtil.nextInt("책 번호를 입력해주세요");
-		List<Object> param  = new ArrayList<Object>();
+		List<Object> param = new ArrayList<Object>();
 		param.add(lecturename);
 		param.add(lecturecontent);
 		param.add(categoryno);
@@ -243,7 +321,7 @@ public class MainController extends LecturePrint {
 		lectureService.lectureUpdate(param);
 		System.out.println("수정이 완료되었습니다.");
 		System.out.println("1. 내 강의 돌아가기\n2. 내 강의 목록보기\n3. 홈");
-		
+
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -255,26 +333,27 @@ public class MainController extends LecturePrint {
 		}
 	}
 
-	private View lecturer_lecture_detail() {//강의 자세히 검색하기 추가
+	private View lecturer_lecture_detail() {// 강의 자세히 검색하기 추가
 		int lectureNum = ScanUtil.nextInt("자세히 검새할 강의를 입력해주세요.");
 		sessionStorage.put("lectureNum", lectureNum);
-		
-		List<Object> param  = new ArrayList<Object>();
+
+		List<Object> param = new ArrayList<Object>();
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		param.add(lectureNum);
-		
-		System.out.println("-----------------------");
-		Map<String, Object> map  = lectureService.lecturer_lecture_detail(param);
-			BigDecimal lecture_no = (BigDecimal) map.get("LECTURE_NO");
-			String lecture_Name = (String) map.get("LECTURE_NAME");
-			String lecture_content = (String) map.get("LECTURE_CONTENT");
-			String category_name = (String) map.get("CATEGORY_NAME");
-			String level_name = (String) map.get("LEVEL_NAME");
-			String book_name = (String) map.get("BOOK_NAME");
 
-			System.out.println("강의번호: " + lecture_no.intValue() + "\t" + "강의명: " + lecture_Name + "\t" + "강의내용: " + lecture_content
-					+ "\t" + "카테고리 이름: " + category_name + "\t" + "난이도: " + level_name+ "\t" +"책이름"+book_name);
-		
+		System.out.println("-----------------------");
+		Map<String, Object> map = lectureService.lecturer_lecture_detail(param);
+		BigDecimal lecture_no = (BigDecimal) map.get("LECTURE_NO");
+		String lecture_Name = (String) map.get("LECTURE_NAME");
+		String lecture_content = (String) map.get("LECTURE_CONTENT");
+		String category_name = (String) map.get("CATEGORY_NAME");
+		String level_name = (String) map.get("LEVEL_NAME");
+		String book_name = (String) map.get("BOOK_NAME");
+
+		System.out.println(
+				"강의번호: " + lecture_no.intValue() + "\t" + "강의명: " + lecture_Name + "\t" + "강의내용: " + lecture_content
+						+ "\t" + "카테고리 이름: " + category_name + "\t" + "난이도: " + level_name + "\t" + "책이름" + book_name);
+
 		System.out.println("1.강의 수정하기\n2. 리뷰보기");
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -285,56 +364,55 @@ public class MainController extends LecturePrint {
 		default:
 			return View.LECTURER_LECTURE_DETAIL;
 		}
-		
+
 	}
 
-	private View bookdelete() {//책 삭제 추가  
+	private View bookdelete() {// 책 삭제 추가
 		int booksell = ScanUtil.nextInt("삭제할 책 번호를 입력해주세요");
 		MainController.sessionStorage.put("book", booksell);
 //		sessionStorage.get("bookNo");
 		List<Object> param = new ArrayList<Object>();
-		param.add((int)sessionStorage.get("book"));
+		param.add((int) sessionStorage.get("book"));
 		bookservice.bookDelete(booksell);
 		System.out.println("정상적으로 삭제가 완료되었습니다.");
 		return View.LECTURER_HOME;
 	}
 
-	private View bookList() {//책 목록BOOK_LIST추가
+	private View bookList() {// 책 목록BOOK_LIST추가 0206 수정
 		System.out.println("전체 책목록을 출력합니다.");
 
-		List<Map<String,Object>> bookList = bookservice.bookList();
+		List<Map<String, Object>> bookList = bookservice.bookList();
 		System.out.println("------------------------");
-		for(Map<String ,Object> map : bookList) {
+		for (Map<String, Object> map : bookList) {
 			BigDecimal bookno = (BigDecimal) map.get("BOOK_NO");
-			String bookname = (String)map.get("BOOK_NAME");
-			String bookcontent = (String)map.get("BOOK_CONTENT");
-			String bookcategoryname = (String)map.get("BOOKCATEGORY_NAME");
-			
+			String bookname = (String) map.get("BOOK_NAME");
+			String bookcontent = (String) map.get("BOOK_CONTENT");
+			String bookcategoryname = (String) map.get("BOOKCATEGORY_NAME");
+
 			System.out.println("책번호: " + bookno.intValue() + "\t" + "책제목: " + bookname + "\t" + "책내용: " + bookcontent
 					+ "\t" + "책 카테고리 이름: " + bookcategoryname);
 		}
-		
-		System.out.println("1. 책 등록하기\n2. 책 삭제하기");
+		System.out.println("1. 책 상세조회하기\n2. 책 등록하기");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.BOOK_INSERT;
+			return View.BOOK_DETAIL;
 		case 2:
-			return View.BOOK_DELETE;
-		default:
+			return View.BOOK_INSERT;
+		default :
 			return View.HOME;
 		}
+
 	}
 
-	private View lecturer_lecture_list() { // 강사님 강의조회하기  추가
+	private View lecturer_lecture_list() { // 강사님 강의조회하기 추가
 
-		
 		System.out.println("내 전체 강의리스트를 출력합니다. ");
 		((UserVo) sessionStorage.get("user")).getUser_no();
-		List<Object> param  = new ArrayList<Object>();
+		List<Object> param = new ArrayList<Object>();
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		lectureService.lecturer_lecture_List(param);
-		
+
 		List<Map<String, Object>> lecturer_lectureList = lectureService.lecturer_lecture_List(param);
 		System.out.println("-----------------------");
 		for (Map<String, Object> map : lecturer_lectureList) {
@@ -345,11 +423,12 @@ public class MainController extends LecturePrint {
 			String level_name = (String) map.get("LEVEL_NAME");
 			String book_name = (String) map.get("BOOK_NAME");
 
-			System.out.println("강의번호: " + lecture_no.intValue() + "\t" + "강의명: " + lecture_Name + "\t" + "강의내용: " + lecture_content
-					+ "\t" + "카테고리 이름: " + category_name + "\t" + "난이도: " + level_name+ "\t" +"책이름"+book_name);
+			System.out.println("강의번호: " + lecture_no.intValue() + "\t" + "강의명: " + lecture_Name + "\t" + "강의내용: "
+					+ lecture_content + "\t" + "카테고리 이름: " + category_name + "\t" + "난이도: " + level_name + "\t" + "책이름"
+					+ book_name);
 		}
 
-			int sel = ScanUtil.nextInt("1. 강의 상세히 검색하기 \n2. 홈");
+		int sel = ScanUtil.nextInt("1. 강의 상세히 검색하기 \n2. 홈");
 		switch (sel) {
 		case 1:
 			return View.LECTURER_LECTURE_DETAIL;
@@ -358,10 +437,10 @@ public class MainController extends LecturePrint {
 		default:
 			return View.HOME;
 		}
-		
+
 	}
 
-	private View lecturerMylecture() {//강사님 내 강의실
+	private View lecturerMylecture() {// 강사님 내 강의실
 		System.out.println("1. 내 강의검색 \n2. 강의 등록");
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -374,7 +453,7 @@ public class MainController extends LecturePrint {
 		}
 	}
 
-	private View reviewDelete() {//리뷰삭제하기
+	private View reviewDelete() {// 리뷰삭제하기
 		System.out.println("리뷰삭제를 진행합니다.");
 		sessionStorage.get("reviewNo");
 		List<Object> param = new ArrayList();
@@ -391,12 +470,13 @@ public class MainController extends LecturePrint {
 		}
 	}
 
-	private View reviewDetail() {//라뷰자세히보기
-		if(!sessionStorage.containsKey("reviewNo")) {
+	// 0205수정
+	private View reviewDetail() {// 라뷰자세히보기
+		if (!sessionStorage.containsKey("reviewNo")) {
 			int reviewNo = ScanUtil.nextInt("리뷰번호를 입력해주세요");
 			sessionStorage.put("reviewNo", reviewNo);
 		}
-		int reviewnum = (int) sessionStorage.get("reviewNo");			
+		int reviewnum = (int) sessionStorage.get("reviewNo");
 		ReviewVo review = reviewService.reviewDetail(reviewnum);
 		System.out.println(review);
 		int sel = ScanUtil.nextInt("1. 리뷰 수정 \n2. 리뷰 삭제\n2. 작성한 리뷰 리트스");
@@ -428,6 +508,7 @@ public class MainController extends LecturePrint {
 		param.add(rated);
 		param.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		param.add((int) sessionStorage.get("lectureNo"));
+
 		int reviewNo = reviewService.reviewUpdate(param);
 		System.out.println("리뷰수정이 완료되었습니다.");
 		sessionStorage.put("reviewNo", reviewNo);
@@ -435,7 +516,7 @@ public class MainController extends LecturePrint {
 		return View.REVIEW_DETAIL;
 	}
 
-	private View reviewList() {//reviewList
+	private View reviewList() {
 		System.out.println("작성한 리뷰 리스트입니다.");
 		List<ReviewVo> reviewlist = reviewService.reviewList(((UserVo) sessionStorage.get("user")).getUser_no());
 		for (ReviewVo reviewList : reviewlist) {
@@ -454,11 +535,12 @@ public class MainController extends LecturePrint {
 
 	}
 
-	private View bookInsert() {
+	private View bookInsert() {//0205 수정본 + 0206수정
 		System.out.println("책 등록을 시작합니다");
 		String bookName = ScanUtil.nextLine("책 이름을 입력해주세여");
-		String bookContent = ScanUtil.nextLine("책 내용을 입열해주세요");
-		int bookcategoryNo = ScanUtil.nextInt("책 종류를 적어주세여");
+		String bookContent = ScanUtil.nextLine("책 내용을 입력해주세요");
+		int bookcategoryNo = ScanUtil.nextInt("책 종류를 적어주세여\n1. 웹개발 \n2.게임개발 \n3.DataBase");
+
 		List<Object> param = new ArrayList<Object>();
 		param.add(bookName);
 		param.add(bookContent);
@@ -466,9 +548,17 @@ public class MainController extends LecturePrint {
 
 		bookservice.bookInsert(param);
 		System.out.println("성공적으로 책을 등록하셨습니다.");
-
+		System.out.println("1. 책 리스트보기\n2. 내 강의");
 		// 나중에 필요하면 이동위치 바꾸기
-		return View.LECTURER_HOME;
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.BOOK_LIST;
+		case 2:
+			return View.LECTURER_HOME;
+		default:
+			return View.LECTURER_HOME;
+		}
 	}
 
 	private View lectureInsert() {
@@ -551,14 +641,13 @@ public class MainController extends LecturePrint {
 		List<Map<String, Object>> pastlectureApplyList = lectureService.pastlectureApplyList(param);
 		System.out.println("-----------------------");
 		for (Map<String, Object> map : pastlectureApplyList) {
-			BigDecimal lectureNum = (BigDecimal) map.get("LECTURE_NO"); 
-			//강의번호 추가 및 순서변경
 			String userName = (String) map.get("USER_NAME");
 			String lectureName = (String) map.get("LECTURE_NAME");
 			String categoryName = (String) map.get("CATEGORY_NAME");
 			String lectureStart = (String) map.get("LECTURE_START");
 			String lectureFinish = (String) map.get("LECTURE_FINISH");
-			System.out.println(lectureNum.intValue() + "\t" +userName + "\t" + lectureName + "\t" + categoryName+ "\t" +categoryName + "\t" + lectureStart + "\t" + lectureFinish );
+			System.out.println(userName + "\t" + lectureName + "\t" + categoryName);
+			System.out.println(categoryName + "\t" + lectureStart + "\t" + lectureFinish);
 		}
 
 		System.out.println("1. 강의 상세보기");
@@ -671,7 +760,7 @@ public class MainController extends LecturePrint {
 		param2.add(((UserVo) sessionStorage.get("user")).getUser_no());
 		param2.add((int) sessionStorage.get("lectureNo"));
 		ReviewVo reviewVo = (ReviewVo) reviewService.reviewChk(param2);
-		
+
 		// 일반회원
 		if (((UserVo) sessionStorage.get("user")).getDivi_no() == 1) {
 			if (alreadyLec) {
@@ -745,7 +834,7 @@ public class MainController extends LecturePrint {
 
 		List<Object> param = new ArrayList<Object>();
 		int sel = ScanUtil.menu();
-		if (sel == 1 ) {
+		if (sel == 1) {
 			String name = ScanUtil.nextLine("이름: ");
 			param.add(name);
 		}
@@ -754,11 +843,11 @@ public class MainController extends LecturePrint {
 			for (LectureCategoryVo l : cateList) {
 				System.out.println(l);
 			}
-			int type = ScanUtil.nextInt("카테고리 번호 선택: ");//인트로 형변환
+			int type = ScanUtil.nextInt("카테고리 번호 선택: ");// 인트로 형변환
 			param.add(type);
 		}
-		if(sel ==3) {
-			String allname = ScanUtil.nextLine("전체 : ");
+		if (sel == 3) {
+			String allname = ScanUtil.nextLine("전체");
 			param.add(allname);
 			param.add(allname);
 		}
@@ -783,7 +872,7 @@ public class MainController extends LecturePrint {
 			System.out.println("검색결과가 존재하지 않습니다");
 		}
 		// 일반회원
-		if (((UserVo) (sessionStorage.get("user"))).getDivi_no() == 1) {//일반화원 구분
+		if (((UserVo) (sessionStorage.get("user"))).getDivi_no() == 1) {// 일반화원 구분
 			System.out.println("1. 강의 상세페이지");
 			System.out.println("2. 강의 검색");
 			System.out.println("3. 홈");
@@ -832,8 +921,9 @@ public class MainController extends LecturePrint {
 		if (sessionStorage.containsKey("currentPage")) {
 			page = (int) sessionStorage.get("currentPage");
 		}
-		int startNum = 1 + 5 * (page - 1);
-		int endNum = 5 * page;
+		int startNum = (page - 1) * 5 + 1;
+		int endNum = startNum + 5 - 1;
+
 		List<Object> pageNum = new ArrayList<Object>();
 		pageNum.add(startNum);
 		pageNum.add(endNum);
@@ -910,24 +1000,451 @@ public class MainController extends LecturePrint {
 		return View.ALL_LECTURE_LIST;
 	}
 
+	// 0205추가
+	private View memDetail() {
+		UserVo user = userService.memDetail((int) sessionStorage.get("memNo"));
+		int user_no = user.getUser_no();
+		String user_name = user.getUser_name();
+		String user_id = user.getUser_id();
+		String user_pass = user.getUser_pass();
+		// null check
+		String user_address = user.getUser_address();
+		if (user_address == null || user_address.isEmpty()) {
+			user_address = "N";
+		}
+
+		String user_hp = user.getUser_hp();
+		String user_bir = user.getUser_bir();
+		String join_date = user.getJoin_date();
+
+		// 회원 유형
+		String memType = "";
+		if (user.getDivi_no() == 1) {
+			memType = "일반회원";
+		}
+		if (user.getDivi_no() == 2) {
+			memType = "강사회원";
+		}
+
+		// null 체크
+		String delyn = user.getDelyn();
+		if (delyn == null || delyn.isEmpty()) {
+			delyn = "N";
+		}
+
+		System.out.println("--------------------회원 정보--------------------");
+		System.out.printf(
+				"회원 번호: %3d\t회원명: %s\n아이디: %s\t비밀번호: %s\n주소: %s\n핸드폰 번호: %s\n생년월일:%s\n가입일: %s\t회원 유형: %s\t삭제 여부: %s\n",
+				user_no, user_name, user_id, user_pass, user_address, user_hp, user_bir, join_date, memType, delyn);
+		System.out.println("----------------------------------------------");
+
+		List<Object> param = new ArrayList<Object>();
+		if (delyn.equals("N")) {
+			System.out.println("1. 회원 삭제하기");
+		}
+		if (delyn.equals("Y")) {
+			System.out.println("1. 회원 복구하기");
+		}
+		System.out.println("2 or 다른키. 회원 리스트로 이동");
+		int sel = ScanUtil.menu();
+		if (sel != 1) {
+			return View.MEM_LIST;
+		}
+		if (sel == 1 && delyn.equals("Y")) {
+			System.out.println(user_name + "회원을 복구하시겠습니까?\n1. 확인, 2 or 다른키. 취소(돌아가기)");
+			int del = ScanUtil.menu();
+			if (del != 1) {
+				return View.MEM_DETAIL;
+			}
+			param.add("");
+		}
+		if (sel == 1 && delyn.equals("N")) {
+			System.out.println(user_name + "회원을 삭제하시겠습니까?\n1. 확인, 2 or 다른키. 취소(돌아가기)");
+			int del = ScanUtil.menu();
+			if (del != 1) {
+				return View.MEM_DETAIL;
+			}
+			param.add("Y");
+		}
+		param.add(user_id);
+		userService.memDelyn(param);
+		return View.MEM_LIST;
+	}
+
+	// 0205추가
+	private View memList() {
+		int page = 1;
+		if (sessionStorage.containsKey("currentPage")) {
+			page = (int) sessionStorage.get("currentPage");
+		}
+		int sPage = (page - 1) * 5 + 1;
+		int ePage = sPage + 5 - 1;
+
+		List<Object> param = new ArrayList<Object>();
+		param.add(sPage);
+		param.add(ePage);
+
+		List<UserVo> userList = userService.memList(param, (int) sessionStorage.get("adminSel"));
+		System.out.println("--------------------회원 목록--------------------");
+		System.out.println("회원 번호\t회원명\t아이디\t비밀번호\t회원유형");
+		for (UserVo user : userList) {
+			// USER_NO, USER_ID, USER_PASS, USER_ADDRESS, USER_HP, USER_BIR, USER_NAME,
+			// JOIN_DATE, DIVI_NO, DELYN
+			int userNo = user.getUser_no();
+			String userId = user.getUser_id();
+			String userName = user.getUser_name();
+
+			// 비밀번호 *로 변경 (6개까지만)
+			String userPass = "";
+			for (int i = 0; i < user.getUser_pass().length(); i++) {
+				userPass += "*";
+				if (i == 6)
+					break;
+			}
+			String userType = "";
+			if (user.getDivi_no() == 1)
+				userType = "일반 회원";
+			if (user.getDivi_no() == 2)
+				userType = "강사 회원";
+			System.out.println(userNo + "\t" + userName + "\t" + userId + "\t" + userPass + "\t" + userType);
+		}
+		System.out.println("----------------------------------------------");
+
+		System.out.println("1. 이전 페이지\n2. 다음 페이지\n3. 회원 상세 정보\n4. home");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			if (page != 1) {
+				page -= 1;
+			} else {
+				System.out.println("!!첫 페이지 입니다!!");
+			}
+			sessionStorage.put("currentPage", page);
+			return View.MEM_LIST;
+		case 2:
+			int totalPages = (int) Math.ceil((double) userService.getMaxMem((int) sessionStorage.get("adminSel")) / 5);
+
+			if (page != totalPages) {
+				page += 1;
+			} else {
+				System.out.println("!마지막 페이지 입니다!!");
+			}
+			sessionStorage.put("currentPage", page);
+
+			return View.MEM_LIST;
+		case 3:
+			int selMemNo = ScanUtil.nextInt("회원 번호를 선택하세요");
+			sessionStorage.put("memNo", selMemNo);
+			return View.MEM_DETAIL;
+		case 4:
+			sessionStorage.remove("adminSel");
+			sessionStorage.remove("currentPage");
+			return View.ADMIN_HOME;
+		default:
+			return View.MEM_LIST;
+		}
+	}
+
+	// 0205추가
+	private View adminLectureDetail() {
+		Map<String, Object> lecture = lectureService.adminLectureDetail((int) sessionStorage.get("lecNo"));
+		// LECTURE_NO, USER_NAME, LECTURE_NAME, LECTURE_CONTENT, CATEGORY_NAME,
+		// LEVEL_NAME, BOOK_NAME, DELYN
+		int lecture_no = ((BigDecimal) lecture.get("LECTURE_NO")).intValue();
+		String user_name = (String) lecture.get("USER_NAME");
+		String lecture_name = (String) lecture.get("LECTURE_NAME");
+		String lecture_content = (String) lecture.get("LECTURE_CONTENT");
+		String category_name = (String) lecture.get("CATEGORY_NAME");
+		String level_name = (String) lecture.get("LEVEL_NAME");
+		String book_name = (String) lecture.get("BOOK_NAME");
+		String delyn = (String) lecture.get("DELYN");
+		// 널체크
+		if (delyn == null || delyn.isEmpty()) {
+			delyn = "N";
+		}
+		// 강의내용 20자 띄워 쓰기
+		StringBuilder formattedContent = new StringBuilder();
+		for (int i = 0; i < lecture_content.length(); i++) {
+			formattedContent.append(lecture_content.charAt(i));
+			if ((i + 1) % 25 == 0) {
+				formattedContent.append("\n\t");
+			}
+		}
+		lecture_content = formattedContent.toString();
+
+		System.out.println("--------------------------강의 정보--------------------------");
+		System.out.println("강의번호: " + lecture_no + "\t|강사명: " + user_name);
+		System.out.println("강의명: " + lecture_name);
+		System.out.println("강의내용:\t" + lecture_content);
+		System.out.println("난이도: " + level_name + "\t|강의 유형: " + category_name);
+		System.out.println("책: " + book_name + "\t|삭제여부: " + delyn);
+		System.out.println("----------------------------------------------------------");
+
+		List<Object> param = new ArrayList<Object>();
+		if (delyn.equals("N")) {
+			System.out.println("1. 강의 삭제하기");
+		}
+		if (delyn.equals("Y")) {
+			System.out.println("1. 강의 복구하기");
+		}
+		System.out.println("2 or 다른키. 강의 리스트로 이동");
+		int sel = ScanUtil.menu();
+		if (sel != 1) {
+			return View.ADMIN_LECTURE_LIST;
+		}
+		if (sel == 1 && delyn.equals("Y")) {
+			System.out.println("강의를 복구하시겠습니까?\n1. 확인, 2 or 다른키. 취소(돌아가기)");
+			int del = ScanUtil.menu();
+			if (del != 1) {
+				return View.ADMIN_LECTURE_DETAIL;
+			}
+			param.add("");
+		}
+		if (sel == 1 && delyn.equals("N")) {
+			System.out.println("강의를 삭제하시겠습니까?\n1. 확인, 2 or 다른키. 취소(돌아가기)");
+			int del = ScanUtil.menu();
+			if (del != 1) {
+				return View.ADMIN_LECTURE_DETAIL;
+			}
+			param.add("Y");
+		}
+		param.add(lecture_no);
+		lectureService.lectureDelyn(param);
+		return View.ADMIN_LECTURE_LIST;
+	}
+
+	// 0205추가
+	private View adminLectureList() {
+		int page = 1;
+		if (sessionStorage.containsKey("currentPage")) {
+			page = (int) sessionStorage.get("currentPage");
+		}
+		int sPage = (page - 1) * 5 + 1;
+		int ePage = sPage + 5 - 1;
+
+		List<Object> param = new ArrayList<Object>();
+		param.add(sPage);
+		param.add(ePage);
+
+		List<LectureVo> lectureList = lectureService.adminLectureList(param);
+
+		System.out.println("-------------------------------강의 목록-------------------------------");
+		System.out.println("강의 번호\t강의명\t\t강의내용\t\t\t강의유형\t강의레벨");
+		for (LectureVo lecture : lectureList) {
+			int lecture_no = lecture.getLecture_no();
+			String lecture_name = lecture.getLecture_name();
+			lecture_name = lecture_name.substring(0, 6) + "...";
+			String lecture_content = lecture.getLecture_content();
+			lecture_content = lecture_content.substring(0, 14) + "...";
+			// 제목 내용 서브 스트링 하기
+			int category_no = lecture.getCategory_no();
+			int level_no = lecture.getLevel_no();
+			String levelName = "";
+			switch (level_no) {
+			case 1:
+				levelName = "Beginner";
+				break;
+			case 2:
+				levelName = "Basic";
+				break;
+			case 3:
+				levelName = "Middle";
+				break;
+			case 4:
+				levelName = "Expert";
+				break;
+			}
+			System.out.println(
+					lecture_no + "\t" + lecture_name + "\t" + lecture_content + "\t" + category_no + "\t" + levelName);
+		}
+		System.out.println("--------------------------------------------------------------------");
+
+		System.out.println("1. 이전 페이지\n2. 다음 페이지\n3. 강의 상세 정보\n4. home");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			if (page != 1) {
+				page -= 1;
+			} else {
+				System.out.println("!!첫 페이지 입니다!!");
+			}
+			sessionStorage.put("currentPage", page);
+			return View.ADMIN_LECTURE_LIST;
+		case 2:
+			int totalPages = (int) Math.ceil((double) lectureService.getMaxPage() / 5);
+			if (page != totalPages) {
+				page += 1;
+			} else {
+				System.out.println("!!마지막 페이지 입니다!!");
+			}
+			sessionStorage.put("currentPage", page);
+			return View.ADMIN_LECTURE_LIST;
+		case 3:
+			int lecNo = ScanUtil.nextInt("강의 번호를 선택하세요: ");
+			sessionStorage.put("lecNo", lecNo);
+			return View.ADMIN_LECTURE_DETAIL;
+		case 4:
+			sessionStorage.remove("currentPage");
+			return View.ADMIN_HOME;
+		default:
+			return View.ADMIN_LECTURE_LIST;
+		}
+	}
+
+	// 0205추가
+	private View adminReviewDetail() {
+		Map<String, Object> review = reviewService.adminReviewDetail((int) sessionStorage.get("revNo"));
+		// REVIEW_NO, CONTENT, RATED, REVIEW_DATE, AS USER_NAME, LECTURE_NO, DELYN
+		int review_no = ((BigDecimal) review.get("REVIEW_NO")).intValue();
+		String content = (String) review.get("CONTENT");
+		String rated = (String) review.get("RATED");
+		String review_date = (String) review.get("REVIEW_DATE");
+		String user_name = (String) review.get("USER_NAME");
+		int lecture_no = ((BigDecimal) review.get("LECTURE_NO")).intValue();
+		String delyn = (String) review.get("DELYN");
+		if (delyn == null || delyn.isEmpty()) {
+			delyn = "N";
+		}
+
+		System.out.println("---------------------리뷰 정보---------------------");
+		System.out.println("|리뷰번호: " + review_no + "\t|작성자: " + user_name);
+		System.out.println("|작성일: " + review_date);
+		System.out.println("|리뷰내용:\t" + content);
+		System.out.println("|강의번호: " + lecture_no + "\t|평점: " + rated + "\t|삭제여부: " + delyn);
+		System.out.println("------------------------------------------------");
+
+		ReplyVo reply = (ReplyVo) replyService.adminGetReply(review_no);
+		if (reply != null) {
+			System.out.println("---------------------답글 정보---------------------");
+			System.out.println("작성일: " + reply.getReply_date());
+			System.out.println("작성 내용: " + reply.getReply_content());
+			System.out.println("------------------------------------------------");
+		}
+
+		List<Object> param = new ArrayList<Object>();
+		if (delyn.equals("N")) {
+			System.out.println("1. 리뷰 삭제하기");
+		}
+		if (delyn.equals("Y")) {
+			System.out.println("1. 리뷰 복구하기");
+		}
+		System.out.println("2 or 다른키. 리뷰 리스트로 이동");
+		int sel = ScanUtil.menu();
+		if (sel != 1) {
+			return View.ADMIN_REVIEW_LIST;
+		}
+		if (sel == 1 && delyn.equals("Y")) {
+			System.out.println("리뷰를 복구하시겠습니까?\n1. 확인, 2 or 다른키. 취소(돌아가기)");
+			int del = ScanUtil.menu();
+			if (del != 1) {
+				return View.ADMIN_REVIEW_DETAIL;
+			}
+			param.add("");
+		}
+		if (sel == 1 && delyn.equals("N")) {
+			System.out.println("리뷰를 삭제하시겠습니까?\n1. 확인, 2 or 다른키. 취소(돌아가기)");
+			int del = ScanUtil.menu();
+			if (del != 1) {
+				return View.ADMIN_REVIEW_DETAIL;
+			}
+			param.add("Y");
+		}
+		param.add(review_no);
+		reviewService.reviewDelyn(param);
+		return View.ADMIN_REVIEW_DETAIL;
+	}
+
+	// 0205추가
+	private View adminReviewList() {
+
+		int page = 1;
+		if (sessionStorage.containsKey("currentPage")) {
+			page = (int) sessionStorage.get("currentPage");
+		}
+		int sPage = (page - 1) * 5 + 1;
+		int ePage = sPage + 5 - 1;
+
+		List<Object> param = new ArrayList<Object>();
+		param.add(sPage);
+		param.add(ePage);
+
+		List<ReviewVo> reviewList = reviewService.adminReviewList(param);
+		System.out.println("----------------------------리뷰 목록----------------------------");
+		System.out.println("|리뷰  번호\t|작성자\t|강의번호\t|리뷰내용\t\t|작성일\t\t|삭제여부");
+		for (ReviewVo review : reviewList) {
+			int review_no = review.getReview_no();
+			String content = review.getContent();
+			content = content.substring(0, 5) + "...";
+
+			String review_date = review.getReview_date();
+			int user_no = review.getUser_no();
+			int lecture_no = review.getLecture_no();
+			String delyn = review.getDelyn();
+			if (delyn == null || delyn.isEmpty()) {
+				// 변수가 null이거나 빈 문자열인 경우 처리할 코드
+				delyn = "N";
+			}
+
+			// 출력
+			System.out.println("|" + review_no + "\t|" + user_no + "\t|" + lecture_no + "\t|" + content + "\t|"
+					+ review_date + "\t|" + delyn);
+		}
+		System.out.println("--------------------------------------------------------------");
+
+		// 페이지 변경
+		System.out.println("1. 이전 페이지\n2. 다음 페이지\n3. 리뷰 상세 정보\n4. home");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			if (page != 1) {
+				page -= 1;
+			} else {
+				System.out.println("!!첫 페이지 입니다!!");
+			}
+			sessionStorage.put("currentPage", page);
+			return View.ADMIN_REVIEW_LIST;
+		case 2:
+			int totalPages = (int) Math.ceil((double) reviewService.getMaxReview() / 5);
+			if (page != totalPages) {
+				page += 1;
+			} else {
+				System.out.println("!!마지막 페이지 입니다!!");
+			}
+			sessionStorage.put("currentPage", page);
+			return View.ADMIN_REVIEW_LIST;
+		case 3:
+			int revNo = ScanUtil.nextInt("리뷰 번호를 선택하세요: ");
+			sessionStorage.put("revNo", revNo);
+			sessionStorage.remove("currentPage");
+			return View.ADMIN_REVIEW_DETAIL;
+		case 4:
+			sessionStorage.remove("currentPage");
+			sessionStorage.remove("revNo");
+			return View.ADMIN_HOME;
+		default:
+			return View.ADMIN_REVIEW_LIST;
+		}
+	}
+
+	// 0205추가
 	private View adminHome() {
-		System.out.println("환영합니다~!~! 관리자님\n");
 		System.out.println("1. 일반회원 조회하기");
 		System.out.println("2. 강사 조회하기");
-		System.out.println("3. 전체회원조회하기");
-		System.out.println("4. 전체리뷰 조회하기");
+		System.out.println("3. 강의 조회하기");
+		System.out.println("4. 리뷰 조회하기");
 		System.out.println("5. 로그아웃");
 		int sel = ScanUtil.menu();
 		switch (sel) {
-//		case 1:
-//			return View.ALL_MEM_LIST;
-//		case 2:
-//			return View.ALL_LECTURER_LIST;
-//		case 3:
-//			return View.ALL_MEM_LIST;
+		case 1:
+		case 2:
+			sessionStorage.put("adminSel", sel);
+			return View.MEM_LIST;
+		case 3:
+			return View.ADMIN_LECTURE_LIST;
 		case 4:
-			return View.ALL_LEVIEW_LIST;
+			return View.ADMIN_REVIEW_LIST;
 		case 5:
+			sessionStorage.clear();
 			return View.HOME;
 		default:
 			return View.HOME;
@@ -935,14 +1452,14 @@ public class MainController extends LecturePrint {
 	}
 
 	private View lecturerHome() {
-		System.out.println("1. 내  강의 ");
+		System.out.println("1. 내강의 조회하기");
 		System.out.println("2. 내 책 조회");
 		System.out.println("3. 로그아웃");
 		System.out.println("4. 회원 탈퇴");
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.LECTURER_MYLECTURE;
+			return View.ALL_LECTURE_LIST;
 		case 2:
 			return View.BOOK_LIST;
 		case 3:
@@ -1003,7 +1520,7 @@ public class MainController extends LecturePrint {
 		String name = ScanUtil.nextLine("이름 : ");
 		String bir = ScanUtil.nextLine("생년월일('20001231'형식으로 입력해주세요!!) : ");
 		String hp = "";
-		// 나중에 service로 빼기
+
 		while (true) {
 			hp = ScanUtil.nextLine("핸드폰번호('01012345678'형식으로 입력해주세요!!) : ");
 			if (hp.matches("\\d{11}")) {
