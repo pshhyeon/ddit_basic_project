@@ -256,13 +256,11 @@ public class MainController extends Print {
 			BigDecimal reviewnum = (BigDecimal) map.get("REVIEW_NO");
 			System.out.println("리뷰번호: " + reviewnum + "\t" + "답변내용: " + replyContent + "\t" + "답변날짜: " + replyDate);
 		}
-		int sel = ScanUtil.nextInt("1.답변수정하기\n2.답변할 리뷰 다시선택하기\n3.홈");
+		int sel = ScanUtil.nextInt("1.답변수정하기\n2.홈");
 		switch (sel) {
 		case 1:
 			return View.REPLY_UPDATE;
 		case 2:
-			return View.REPLY_REVIEW;
-		case 3:
 			return View.LECTURER_HOME;
 		default:
 			return View.LECTURER_HOME;
